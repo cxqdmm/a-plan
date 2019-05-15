@@ -5,6 +5,7 @@
   "dependencies": {
     "@babel/core": "7.4.3",
     "@hot-loader/react-dom": "^16.8.6",
+    "@loadable/component": "^5.10.1",
     "@rescripts/cli": "0.0.10",
     "@rescripts/rescript-env": "0.0.10",
     "@svgr/webpack": "4.1.0",
@@ -52,6 +53,7 @@
     "react-dev-utils": "^9.0.0",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.8.4",
+    "react-router-dom": "^5.0.0",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
     "semver": "6.0.0",

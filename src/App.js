@@ -1,16 +1,19 @@
 import React from 'react';
-import { hot } from 'react-hot-loader';
-import {Button} from 'antd';
 import './App.less';
+import { routerConfig, RouteWithSubRoutes } from './route';
+
+import { BrowserRouter as Router } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-      <Button type="primary">Primary</Button>
-      </header>
-    </div>
+    <Router>
+      {
+        routerConfig.map(route => (
+          <RouteWithSubRoutes key={route.path} {...route} />
+        ))
+      }
+    </Router>
   );
 }
 
-export default hot(module)(App);
+export default App;
