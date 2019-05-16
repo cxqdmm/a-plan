@@ -1,7 +1,51 @@
 {
   "name": "a-plan",
+  "author": {
+    "name": "cxq",
+    "email": "940909315@qq.com"
+  },
+  "description": "web-builder",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js",
+    "postinstall": "electron-builder install-app-deps",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --mac",
+    "electron-dev": "concurrently \"BROWSER=none IS_ELECTRON=true npm run start\" \"wait-on http://localhost:3000 && electron --inspect-brk=5858 .\""
+  },
+  "build": {
+    "appId": "com.aplan.aplan-electron",
+    "productName": "a-plan",
+    "asar": true,
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    
+    "dmg": {
+      "contents": [
+        {
+          "x": 380,
+          "y": 280,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 110,
+          "y": 280,
+          "type": "file"
+        }
+      ],
+      "window": {
+        "width": 500,
+        "height": 500
+      }
+    }
+  },
   "dependencies": {
     "@babel/core": "7.4.3",
     "@hot-loader/react-dom": "^16.8.6",
@@ -65,13 +109,6 @@
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "4.2.0"
   },
-  "main": "public/electron.js",
-  "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "electron-dev": "concurrently \"BROWSER=none IS_ELECTRON=true npm run start\" \"wait-on http://localhost:3000 && electron .\""
-  },
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -91,6 +128,7 @@
     "babel-plugin-import": "^1.11.0",
     "concurrently": "^4.1.0",
     "electron": "^5.0.1",
+    "electron-builder": "^20.40.2",
     "electron-is-dev": "^1.1.0",
     "wait-on": "^3.2.0"
   },
