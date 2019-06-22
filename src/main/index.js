@@ -1,7 +1,9 @@
 const electron = require('electron');
 const app = electron.app;
+const ipcMain = electron.ipcMain;
+const dialog = electron.dialog;
 const BrowserWindow = electron.BrowserWindow;
-
+const { launchTerminal } = require('./terminal');
 const path = require('path');
 const isDev = require('electron-is-dev');
 let mainWindow;
@@ -36,3 +38,14 @@ app.on('activate', () => {
     createWindow();
   }
 })
+ipcMain.on('open-directory-dialog', (event, p) => {
+  dialog.showOpenDialog({
+        properties: [p]
+      },function (files) {
+          if (files){// 如果有选中
+            // 发送选择的对象给子进程
+            event.sender.send('selectDir', files[0])
+          }
+      })
+})
+launchTerminal(ipcMain);
