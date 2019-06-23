@@ -10,11 +10,7 @@ function getComponent(page) {
 const baseConfig = [
   {
     path: '/',
-    component: getComponent('home'),
-  },
-  {
-    path: '/home',
-    component: getComponent('home'),
+    redirect: 'dashboard',
   },
 ]
 const pageConfig = [
@@ -42,13 +38,21 @@ const RouteWithSubRoutes = (route) => (
           return <Redirect
             to={{
               pathname: "/login",
-              search: "?utm=your+face",
+              search: "",
               state: { referrer: window.location.href }
             }}
           />
         }
       }
-
+      if (props.redirect) {
+        return <Redirect
+            to={{
+              pathname: `/${props.redirect}`,
+              search: "",
+              state: { referrer: window.location.href }
+            }}
+          />
+      }
       return <route.component
         {...props}
         {...route}

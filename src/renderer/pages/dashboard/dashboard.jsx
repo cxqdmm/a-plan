@@ -16,8 +16,7 @@ nedb.createDb({
   autoload: true,
 })
 
-function Dashboard() {
-
+function Dashboard(props) {
   return (
     <div styleName="root">
       <div styleName="body">
