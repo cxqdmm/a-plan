@@ -7,7 +7,7 @@ import {
   Switch 
 } from 'react-router-dom'
 import './layout.module.less';
-import Menu from 'component/menu/menu';
+import Menu from './menu/menu';
 import loadable from '@loadable/component'
 import pageConfig from '../pageConfig';
 function getComponent(page) {
