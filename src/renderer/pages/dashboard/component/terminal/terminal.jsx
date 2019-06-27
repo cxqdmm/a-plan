@@ -40,10 +40,15 @@ function TerminalContainer() {
     // localEcho.read("~$ ")
     //   .then(input => )
     //   .catch(error => alert(`Error reading: ${error}`));
-    ipcRenderer.on('shell-out', (event, value) => {
+    const listener = (event, value) => {
       localEcho.print(value)
       console.log(value)
-    })
+    }
+    ipcRenderer.on('shell-out', listener)
+    return () => {
+      ipcRenderer.off('shell-out', listener)
+
+    }
   })
   useEffect(() => {
     if (terminalModule.shell) {

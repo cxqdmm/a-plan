@@ -1,19 +1,22 @@
 import React from 'react';
 import { Icon } from 'antd';
 import './index.module.less';
-import { Link } from 'react-router-dom';
-function Menu(props) {
-  return (
-      <div className="flex vertical" styleName="menu">
-        {
-          props.pages.map(page => {
-            return <Link styleName={`menu-item ${window.location.pathname === page.path ? 'highlight' : ''}`} to={page.path}>
-              <Icon width="40px" height="20px" type="appstore" />
-              <span>{page.title}</span>
-            </Link>
-          })
-        }
-      </div>
-  )
+import { Link, withRouter } from 'react-router-dom';
+@withRouter
+class Menu extends React.Component {
+  render() {
+    return (
+        <div className="flex vertical" styleName="menu">
+          {
+            this.props.pages.map((page, index) => {
+              return <Link key={index} styleName={`menu-item ${this.props.location.pathname === page.path ? 'highlight' : ''}`} to={page.path}>
+                <Icon styleName="font" theme="filled" type={page.type} />
+                <span>{page.title}</span>
+              </Link>
+            })
+          }
+        </div>
+    )
+  }
 }
 export default Menu;

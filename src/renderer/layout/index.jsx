@@ -33,7 +33,7 @@ export default function Layout(props) {
                   ) : null;
                 })}
 
-                <Redirect exact from="/" to="/dashboard" />
+                <Redirect exact from="/" to="/project" />
               </Switch>
         </div>
       </div>
