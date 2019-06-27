@@ -1,4 +1,4 @@
-import { getObservableProps, setObservablePropDispatch, getObservablePropDispatch} from './observable';
+import { getObservableProps, setObservablePropDispatch } from './observable';
 /**
  * @argument 数据模块
  */

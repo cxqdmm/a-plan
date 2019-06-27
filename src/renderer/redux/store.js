@@ -1,6 +1,5 @@
 import { useState } from 'react';
 const _state = Symbol('state');
-const _modules = Symbol('module');
 export default class Store {
   constructor(props) {
     this._context = props.context;

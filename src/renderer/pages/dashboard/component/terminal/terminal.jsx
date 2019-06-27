@@ -9,13 +9,13 @@ import 'xterm/dist/xterm.css'
 import 'xterm/dist/addons/fullscreen/fullscreen.css';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
-import LocalEchoController from 'local-echo';
+import LocalEchoController from './util/LocalEchoController';
 
 const store = createStore(React.createContext(), terminalModule)
 
 const term = new Terminal({
   rendererType: 'canvas',
-  rows: 20,
+  rows: 40,
   convertEol: true,
   scrollback: 10,
   cursorBlink: true,
@@ -31,18 +31,30 @@ let localEcho;
 term.loadAddon(new FitAddon());
 term.loadAddon(new SearchAddon());
 
+function enableWrite(start) { 
+  localEcho.read(start)
+  .then(input => {
+    terminalModule.runShell([input])
+  }).catch(error => alert(`Error reading: ${error}`));
+}
+
 function TerminalContainer() {
   const terminalRef = useRef(null);
+
   useMounted(() => {
     term.open(terminalRef.current);
+    term.focus();
     localEcho = new LocalEchoController(term);
-
-    // localEcho.read("~$ ")
-    //   .then(input => )
-    //   .catch(error => alert(`Error reading: ${error}`));
+    enableWrite()
     const listener = (event, value) => {
+      console.log('value:', value)
       localEcho.print(value)
-      console.log(value)
+      if (/\[m\[m\[m/.test(value)) {
+        localEcho.nextStart = value;
+      }
+      if (/\[?2004h/.test(value)) {
+        enableWrite( localEcho.nextStart );
+      }
     }
     ipcRenderer.on('shell-out', listener)
     return () => {
@@ -50,6 +62,7 @@ function TerminalContainer() {
 
     }
   })
+
   useEffect(() => {
     if (terminalModule.shell) {
       terminalModule.shell.forEach(sl => {
@@ -57,6 +70,7 @@ function TerminalContainer() {
       })
     }
   }, [terminalModule.waiting])
+
   return (
     <div>
       <div ref={terminalRef} id="terminal"></div>

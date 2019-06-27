@@ -41,7 +41,8 @@ function ProjectTable(props) {
   return (
     <Table 
       className={props.className}
-      // size="small"
+      rowKey="dir"
+      size="small"
       bordered={true}
       columns={columns} 
       dataSource={DataModule.projectList} 
