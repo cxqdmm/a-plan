@@ -92,7 +92,8 @@ export default class LocalEchoController {
     return new Promise((resolve, reject) => {
       this.term.write(prompt);
       this._activePrompt = {
-        prompt,
+        prompt: prompt,
+        promptString: prompt ?  prompt.replace(/(\x1b.*?[m])|(\x1b.*$)/g, '').replace(/\n/,'').replace(/\r/,'') : '',
         continuationPrompt,
         resolve,
         reject
@@ -197,13 +198,19 @@ export default class LocalEchoController {
 
     return prompt + input.replace(/\n/g, "\n" + continuationPrompt);
   }
+  applyPromptsString(input) {
+    const prompt = (this._activePrompt || {}).promptString || "";
+    const continuationPrompt =
+      (this._activePrompt || {}).continuationPrompt || "";
 
+    return prompt + input.replace(/\n/g, "\n" + continuationPrompt);
+  }
   /**
    * Advances the `offset` as required in order to accompany the prompt
    * additions to the input.
    */
   applyPromptOffset(input, offset) {
-    const newInput = this.applyPrompts(input.substr(0, offset));
+    const newInput = this.applyPromptsString(input.substr(0, offset));
     return newInput.length;
   }
 
@@ -214,18 +221,22 @@ export default class LocalEchoController {
    * and move the cursor in the beginning of the first line of the prompt.
    */
   clearInput() {
-    const currentPrompt = this.applyPrompts(this._input);
+    const currentPrompt = this.applyPromptsString(this._input);
 
     // Get the overall number of lines to clear
-    const allRows = countLines(currentPrompt, this._termSize.cols);
-
+    // const allRows = countLines(currentPrompt, this._termSize.cols);
+    let allRows = Math.floor(currentPrompt.length/this._termSize.cols)
+    if (currentPrompt.length%this._termSize.cols > 0) {
+      allRows += 1;
+    }
+    console.log('allRows', allRows)
     // Get the line we are currently in
     const promptCursor = this.applyPromptOffset(this._input, this._cursor);
-    const { col, row } = offsetToColRow(
-      currentPrompt,
-      promptCursor,
-      this._termSize.cols
-    );
+    let row = Math.floor(promptCursor/this._termSize.cols)
+    let col = promptCursor%this._termSize.cols;
+    if (col) {
+      row += 1;
+    }
 
     // First move on the last line
     const moveRows = allRows - row - 1;

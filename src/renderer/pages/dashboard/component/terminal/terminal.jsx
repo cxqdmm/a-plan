@@ -21,8 +21,8 @@ const term = new Terminal({
   cursorBlink: true,
   fontSize: 12,
   theme: {
-    foreground: 'yellow',
-    background: '#060101',
+    foreground: 'white',
+    background: '#232527',
     cursor: 'help',
   }
 });
@@ -47,7 +47,6 @@ function TerminalContainer() {
     localEcho = new LocalEchoController(term);
     enableWrite()
     const listener = (event, value) => {
-      console.log('value:', value)
       localEcho.print(value)
       if (/\[m\[m\[m/.test(value)) {
         localEcho.nextStart = value;
