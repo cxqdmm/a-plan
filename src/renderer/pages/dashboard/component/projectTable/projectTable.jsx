@@ -1,53 +1,55 @@
 import React from 'react';
-import { Table, Button } from 'antd';
-import { createStore, useRedux, connect } from 'redux';
-import DataModule from './module';
-import moment from 'moment';
 import { hot } from 'react-hot-loader/root';
+import { Row, Col, Button } from 'antd';
+import Card from 'component/card/card';
+import { createStore, useRedux, connect } from 'redux';
+import { useMounted } from 'hooks';
+import DataModule from './module';
 import { open } from 'util/vscode';
+import nedb from 'util/nedb';
+import './index.module.less';
 const store = createStore(React.createContext(), DataModule)
 
 
+let db;
 function ProjectTable(props) {
-  const columns = [
-    {
-      title: '项目名',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '路径',
-      dataIndex: 'dir',
-      key: 'dir',
-    },
-    {
-      title: '修改日期',
-      dataIndex: 'today',
-      key: 'today',
-      render: text => <span>{moment(text).format("YYYY-MM-DD HH:mm:ss")}</span>,
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render:  (text, record) => (
-        <span>
-          <Button type="link" onClick={() => open(record.dir + '/' + record.name)}>打开项目</Button>
-        </span>
-      ),
-    },
-  ];
-  
-  
+  useMounted(() => {
+    let doc;
+    const fun = async () => {
+      db = nedb.get('store/dashboard/project');
+      doc = await db.find({type: 'project'});
+      DataModule.setList(doc || []);
+    };
+    fun();
+  })
+
   return (
-    <Table 
-      className={props.className}
-      rowKey="dir"
-      size="small"
-      bordered={true}
-      columns={columns} 
-      dataSource={DataModule.projectList} 
-    />
+    <Card className={props.className}>
+      <Card.Header>
+        项目列表
+      </Card.Header>
+      <Card.Body>
+        {
+          DataModule.projectList.map((item, key) => {
+            return <ListItem key={key} {...item} />
+          })
+        }
+      </Card.Body>
+
+    </Card>
+  
   )
+}
+
+function ListItem(props) {
+  return <Row type="flex" key={props.key} align="middle" style={{padding: '5px 0', cursor: 'pointer'}}>
+  <Col span={12} order={1}>
+    <span styleName="btn-default hover" onClick={() => props.selectProject(props)}>{props.name}</span>
+  </Col>
+  <Col span={12} order={2}>
+    <Button type="link" onClick={() => open(props.dir)}>vscode</Button>
+  </Col>
+</Row>
 }
 
 export { DataModule }

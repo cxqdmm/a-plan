@@ -6,9 +6,10 @@ import DataModule from './module';
 
 import NewProject from './component/newProject/newProject';
 import Terminal from './component/terminal/terminal';
-import ProjectTable from './component/projectTable/projectTable';
+import { Layout } from 'antd';
 
 import './index.module.less';
+const { Header, Footer, Content } = Layout;
 
 const store = createStore(React.createContext(), DataModule)
 nedb.createDb({
@@ -18,15 +19,17 @@ nedb.createDb({
 
 function Dashboard(props) {
   return (
-    <div styleName="root">
-      <div styleName="body">
+    <Layout styleName="layout">
+      <Header styleName="header">
         <NewProject></NewProject>
-        <ProjectTable styleName="project"></ProjectTable>
-      </div>
-      <div styleName="footer">
+      </Header>
+      <Content>
+
+      </Content>
+      <Footer styleName="footer">
         <Terminal></Terminal>
-      </div>
-    </div>
+      </Footer>
+    </Layout>
   )
 }
 export default useRedux(store)(Dashboard);

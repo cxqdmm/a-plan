@@ -15,6 +15,17 @@ class DbInstance {
       })
     })
   }
+  update(search, data) {
+    return new Promise((resolve, reject) => {
+      this.db.update(search, {$set: data}, {}, function(err, doc) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(doc);
+        }
+      })
+    })
+  }
   find(search) {
     return new Promise((resolve, reject) => {
       this.db.find(search, function(err, doc) {

@@ -1,7 +1,7 @@
 const pageConfig = [
   {
     path: '/dashboard',
-    type: 'layout',
+    type: 'dashboard',
     title: '工作台',
     component: 'dashboard',
   }, {

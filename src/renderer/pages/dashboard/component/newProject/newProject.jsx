@@ -4,22 +4,20 @@ import { Button, Modal, Row, Col, Input, Icon } from 'antd';
 import { ipcRenderer } from 'electron';
 import useMounted from 'hooks/useMounted';
 import {  terminalModule as terminal } from '../terminal/terminal';
-import {  DataModule as projectTable } from '../projectTable/projectTable';
+import ProjectTable from '../projectTable/projectTable';
+import CModal from 'component/modal/modal';
 import nedb from 'util/nedb';
+import dashboardModule from '../../module';
+
+import './index.module.less';
 let db;
 function NewProject() {
   const [visible, setVisible] = useState(false);
+  const [isShowModal, setModalVisible] = useState(false);
   const [projectName, setProjectName] = useState('');
   const [projectDir, setProjectDir] = useState('');
   useMounted(() => {
-    let doc;
-    const fun = async () => {
-      db = nedb.get('store/dashboard/project');
-      doc = await db.find({type: 'project'});
-      projectTable.setList(doc || []);
-      console.log('doc', doc)
-    };
-    fun();
+    db = nedb.get('store/dashboard/project');
     ipcRenderer.on('selectDir',(event,value) => {
       setProjectDir(value);
     })
@@ -28,7 +26,7 @@ function NewProject() {
     db.insert({
       type: 'project',
       name: projectName,
-      dir: projectDir,
+      dir: projectDir + '/' + projectName,
       today: new Date(),
     })
     terminal.runShell([`cd ${projectDir}`, `npx create-react-app ${projectName}`]);
@@ -40,22 +38,48 @@ function NewProject() {
   function handleCancel() {
     setVisible(false);
   }
+  function closeLeftModal() {
+    setModalVisible(false);
+  }
+  function selectProject(project) {
+    dashboardModule.setEditProject(project);
+    closeLeftModal();
+  }
   const showDialogCreate = () => {
     setVisible(true);
     setProjectDir('');
     setProjectName('');
   } 
- 
+  const showProjectList = () => {
+    setModalVisible(true);
+  }
+  
   return (
     <div>
       <Button 
         type="primary" 
         shape="round"
-        icon="plus"
-        onClick={showDialogCreate}
-        >创建新项目</Button>
+        onClick={showProjectList}
+        >项目管理</Button>
+      <CModal 
+        visible={isShowModal}
+        type="left" 
+        style={{marginLeft: '80px'}}
+        onClickMask={closeLeftModal}
+        >
+        <div styleName="project">
+          <Button 
+          styleName="btn-new"
+          type="primary" 
+          shape="round"
+          icon="plus"
+          onClick={showDialogCreate}
+          >创建项目</Button>
+          <ProjectTable selectProject={selectProject}></ProjectTable>
+        </div>
+      </CModal>
       <Modal
-          title="创建新项目"
+          title="创建项目"
           okText="开始创建项目"
           cancelText="取消"
           visible={visible}
