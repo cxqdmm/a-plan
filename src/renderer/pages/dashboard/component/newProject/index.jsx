@@ -3,13 +3,16 @@ import { hot } from 'react-hot-loader/root';
 import { Button, Modal, Row, Col, Input, Icon } from 'antd';
 import { ipcRenderer } from 'electron';
 import useMounted from 'hooks/useMounted';
-import {  terminalModule as terminal } from '../terminal/terminal';
-import ProjectTable from '../projectTable/projectTable';
-import CModal from 'component/modal/modal';
+import {  terminalModule as terminal } from '../terminal';
+import ProjectTable from '../projectTable';
+import ProjectTemplate from '../projectTemplate';
+import CModal from 'component/modal';
+import Step from 'component/step';
 import nedb from 'util/nedb';
 import dashboardModule from '../../module';
 
 import './index.module.less';
+const StepView = Step.StepView;
 let db;
 function NewProject() {
   const [visible, setVisible] = useState(false);
@@ -18,6 +21,7 @@ function NewProject() {
   const [projectDir, setProjectDir] = useState('');
   useMounted(() => {
     db = nedb.get('store/dashboard/project');
+    dashboardModule.getTemplate();
     ipcRenderer.on('selectDir',(event,value) => {
       setProjectDir(value);
     })
@@ -53,7 +57,10 @@ function NewProject() {
   const showProjectList = () => {
     setModalVisible(true);
   }
-  
+  function stepChange(step) {
+    console.log(step)
+    return true;
+  }
   return (
     <div>
       <Button 
@@ -85,21 +92,30 @@ function NewProject() {
           onOk={handleOk}
           onCancel={handleCancel}
         >
-          <div>
-          <Row gutter={16} style={{padding: 5}}>
-            <Col span={4} style={{textAlign: 'right', lineHeight:'32px'}}>项目名</Col>
-            <Col span={16}>
-              <Input value={projectName} onChange={e =>
-                setProjectName(e.target.value)}></Input>
-            </Col>
-          </Row>
-          <Row gutter={16} style={{padding: 5}}>
-            <Col span={4} style={{textAlign: 'right', lineHeight:'32px'}}>路径</Col>
-            <Col span={16}>
-              <Input addonAfter={<Icon type="folder" onClick={() => ipcRenderer.send('open-directory-dialog','openDirectory')}/>} value={projectDir} />
-            </Col>
-          </Row>
-          </div>
+          <Step
+            onClick={stepChange}
+            >
+            <StepView id="step-1">
+              <ProjectTemplate templates={dashboardModule.templates}/>
+            </StepView>
+            <StepView id="step-2">
+              <div>
+                <Row gutter={16} style={{padding: 5}}>
+                  <Col span={4} style={{textAlign: 'right', lineHeight:'32px'}}>项目名</Col>
+                  <Col span={16}>
+                    <Input value={projectName} onChange={e =>
+                      setProjectName(e.target.value)}></Input>
+                  </Col>
+                </Row>
+                <Row gutter={16} style={{padding: 5}}>
+                  <Col span={4} style={{textAlign: 'right', lineHeight:'32px'}}>路径</Col>
+                  <Col span={16}>
+                    <Input addonAfter={<Icon type="folder" onClick={() => ipcRenderer.send('open-directory-dialog','openDirectory')}/>} value={projectDir} />
+                  </Col>
+                </Row>
+              </div>
+            </StepView>
+          </Step>
       </Modal>
     </div>
   )

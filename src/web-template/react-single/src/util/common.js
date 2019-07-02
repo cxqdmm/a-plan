@@ -1,6 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-
 export function debounce(fn, time) {
   let startTime, interval = time || 300, clock;
   return function(e) {
@@ -16,15 +13,4 @@ export function debounce(fn, time) {
       clearTimeout(clock);
     }, interval);
   }
-}
-
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
-
-export function getTemplate() {
-  const dirs = fs.readdirSync(resolveApp('src/web-template'));
-  const templates = dirs.filter(item => {
-    return !/^\./.test(item);
-  })
-  return templates;
 }

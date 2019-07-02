@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { createStore, useRedux } from 'redux';
 import DataModule from './module';
 import { useMounted } from 'hooks';
-import NewProject from './component/newProject/newProject';
-import Terminal from './component/terminal/terminal';
-import ProjectHeader from './component/projectHeader/projectHeader';
-import CModal from 'component/modal/modal';
+import NewProject from './component/newProject';
+import Terminal from './component/terminal';
+import ProjectHeader from './component/projectHeader';
+import CModal from 'component/modal';
 
 import { Button, Tooltip, Layout } from 'antd';
 import { open } from 'util/vscode';

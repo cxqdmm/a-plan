@@ -7,30 +7,23 @@ import useMounted from 'hooks/useMounted';
 import { Terminal } from 'xterm';
 import 'xterm/dist/xterm.css'
 import 'xterm/dist/addons/fullscreen/fullscreen.css';
-import { FitAddon } from 'xterm-addon-fit';
-import { SearchAddon } from 'xterm-addon-search';
 import LocalEchoController from './util/LocalEchoController';
 
+import * as fit from 'xterm/lib/addons/fit/fit';
 const store = createStore(React.createContext(), terminalModule)
-
+Terminal.applyAddon(fit); 
 const term = new Terminal({
   rendererType: 'canvas',
-  rows: 60,
   convertEol: true,
   scrollback: 10,
-  cursorBlink: true,
   fontSize: 12,
   theme: {
-    height: '100%',
     foreground: 'white',
     background: '#232527',
     cursor: 'help',
   }
 });
 let localEcho;
-
-term.loadAddon(new FitAddon());
-term.loadAddon(new SearchAddon());
 
 function enableWrite(start) { 
   localEcho.read(start)
@@ -45,6 +38,7 @@ function TerminalContainer() {
   useMounted(() => {
     term.open(terminalRef.current);
     term.focus();
+    term.fit();
     localEcho = new LocalEchoController(term);
     enableWrite()
     const listener = (event, value) => {
@@ -72,7 +66,7 @@ function TerminalContainer() {
   }, [terminalModule.waiting])
 
   return (
-      <div ref={terminalRef} id="terminal" style={{width: 800}}></div>
+      <div ref={terminalRef} id="terminal" style={{width: '60vw', height:'60vh', padding: 5, backgroundColor: '#232527'}}></div>
   )
 }
 export { terminalModule }

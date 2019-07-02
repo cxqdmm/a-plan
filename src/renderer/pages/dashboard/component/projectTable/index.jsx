@@ -1,7 +1,7 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Row, Col, Button } from 'antd';
-import Card from 'component/card/card';
+import Card from 'component/card';
 import { createStore, useRedux, connect } from 'redux';
 import { useMounted } from 'hooks';
 import DataModule from './module';
