@@ -15,12 +15,13 @@ const store = createStore(React.createContext(), terminalModule)
 
 const term = new Terminal({
   rendererType: 'canvas',
-  rows: 40,
+  rows: 60,
   convertEol: true,
   scrollback: 10,
   cursorBlink: true,
   fontSize: 12,
   theme: {
+    height: '100%',
     foreground: 'white',
     background: '#232527',
     cursor: 'help',
@@ -71,9 +72,7 @@ function TerminalContainer() {
   }, [terminalModule.waiting])
 
   return (
-    <div>
-      <div ref={terminalRef} id="terminal"></div>
-    </div>
+      <div ref={terminalRef} id="terminal" style={{width: 800}}></div>
   )
 }
 export { terminalModule }

@@ -31,7 +31,7 @@ function ProjectTable(props) {
       <Card.Body>
         {
           DataModule.projectList.map((item, key) => {
-            return <ListItem key={key} {...item} />
+            return <ListItem key={key} {...item} selectProject={() => {props.selectProject(item)}}/>
           })
         }
       </Card.Body>
@@ -42,9 +42,9 @@ function ProjectTable(props) {
 }
 
 function ListItem(props) {
-  return <Row type="flex" key={props.key} align="middle" style={{padding: '5px 0', cursor: 'pointer'}}>
+  return <Row type="flex" align="middle" style={{padding: '5px 0', cursor: 'pointer'}}>
   <Col span={12} order={1}>
-    <span styleName="btn-default hover" onClick={() => props.selectProject(props)}>{props.name}</span>
+    <span styleName="btn-default hover" onClick={() => props.selectProject()}>{props.name}</span>
   </Col>
   <Col span={12} order={2}>
     <Button type="link" onClick={() => open(props.dir)}>vscode</Button>

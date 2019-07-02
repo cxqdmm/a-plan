@@ -46,7 +46,7 @@ export function offsetToColRow(input, offset, maxCols) {
 
   for (let i = 0; i < offset; ++i) {
     const chr = input.charAt(i);
-    if (chr == "\n") {
+    if (chr === "\n") {
       col = 0;
       row += 1;
     } else {
@@ -80,7 +80,7 @@ export function countLines(input, maxCols) {
  */
 export function isIncompleteInput(input) {
   // Empty input is not incomplete
-  if (input.trim() == "") {
+  if (input.trim() === "") {
     return false;
   }
 
@@ -97,7 +97,7 @@ export function isIncompleteInput(input) {
     input
       .split(/(\|\||\||&&)/g)
       .pop()
-      .trim() == ""
+      .trim() === ""
   ) {
     return true;
   }

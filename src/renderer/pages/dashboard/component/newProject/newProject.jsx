@@ -63,8 +63,7 @@ function NewProject() {
         >项目管理</Button>
       <CModal 
         visible={isShowModal}
-        type="left" 
-        style={{marginLeft: '80px'}}
+        type="right" 
         onClickMask={closeLeftModal}
         >
         <div styleName="project">

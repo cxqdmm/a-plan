@@ -460,7 +460,7 @@ export default class LocalEchoController {
     let ofs;
 
     // Handle ANSI escape sequences
-    if (ord == 0x1b) {
+    if (ord === 0x1b) {
       switch (data.substr(1)) {
         case "[A": // Up arrow
           if (this.history) {

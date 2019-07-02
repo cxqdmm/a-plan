@@ -17,7 +17,8 @@
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --mac",
-    "electron-dev": "concurrently \"BROWSER=none IS_ELECTRON=true npm run start\" \"electron --inspect=5858 .\""
+    "electron-dev": "concurrently \"BROWSER=none IS_ELECTRON=true npm run start\" \"electron --inspect=5858 .\"",
+    "fix": "eslint --fix"
   },
   "build": {
     "appId": "com.aplan.aplan-electron",
@@ -116,6 +117,7 @@
     "terminal-in-react": "^4.3.1",
     "terminal-kit": "^1.28.1",
     "terser-webpack-plugin": "1.2.3",
+    "typescript": "^3.5.2",
     "url-loader": "1.1.2",
     "webpack": "4.29.6",
     "webpack-dev-server": "3.2.1",

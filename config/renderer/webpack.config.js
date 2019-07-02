@@ -325,6 +325,7 @@ module.exports = function(webpackEnv) {
         'root': path.resolve(process.cwd(), './src/renderer'),
         'redux': path.resolve(process.cwd(), './src/renderer/redux'),
         'css': path.resolve(process.cwd(), './src/renderer/css'),
+        'react-dom': '@hot-loader/react-dom',
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
