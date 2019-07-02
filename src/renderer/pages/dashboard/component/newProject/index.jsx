@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { hot } from 'react-hot-loader/root';
-import { Button, Modal, Row, Col, Input, Icon } from 'antd';
+import { Button, Descriptions, Badge, Row, Col, Input, Icon } from 'antd';
 import { ipcRenderer } from 'electron';
 import useMounted from 'hooks/useMounted';
 import {  terminalModule as terminal } from '../terminal';
@@ -84,39 +84,32 @@ function NewProject() {
           <ProjectTable selectProject={selectProject}></ProjectTable>
         </div>
       </CModal>
-      <Modal
-          title="创建项目"
-          okText="开始创建项目"
-          cancelText="取消"
-          visible={visible}
-          onOk={handleOk}
-          onCancel={handleCancel}
+      <CModal
+        visible={visible}
+        onClickMask={handleCancel}
         >
           <Step
+            style={{width: 500, height: 400}}
             onClick={stepChange}
             >
             <StepView id="step-1">
               <ProjectTemplate templates={dashboardModule.templates}/>
             </StepView>
             <StepView id="step-2">
-              <div>
-                <Row gutter={16} style={{padding: 5}}>
-                  <Col span={4} style={{textAlign: 'right', lineHeight:'32px'}}>项目名</Col>
-                  <Col span={16}>
+              <div styleName="center">
+                <Descriptions bordered>
+                  <Descriptions.Item label="项目名" span={3}>
                     <Input value={projectName} onChange={e =>
-                      setProjectName(e.target.value)}></Input>
-                  </Col>
-                </Row>
-                <Row gutter={16} style={{padding: 5}}>
-                  <Col span={4} style={{textAlign: 'right', lineHeight:'32px'}}>路径</Col>
-                  <Col span={16}>
+                        setProjectName(e.target.value)}></Input>
+                  </Descriptions.Item>
+                  <Descriptions.Item label="路径" span={3}>
                     <Input addonAfter={<Icon type="folder" onClick={() => ipcRenderer.send('open-directory-dialog','openDirectory')}/>} value={projectDir} />
-                  </Col>
-                </Row>
+                  </Descriptions.Item>
+                </Descriptions>
               </div>
             </StepView>
           </Step>
-      </Modal>
+      </CModal>
     </div>
   )
 }

@@ -112,6 +112,7 @@
     "react-terminal-component": "^1.4.0",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
+    "sass-resources-loader": "^2.0.1",
     "semver": "6.0.0",
     "style-loader": "0.23.1",
     "terminal-in-react": "^4.3.1",

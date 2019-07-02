@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './index.module.less';
-import { Button } from 'antd';
+import { Icon } from 'antd';
 
 function isAllStepView(children) {
   const ind = children.findIndex(item => {
@@ -9,11 +9,7 @@ function isAllStepView(children) {
   })
   return ind === -1;
 }
-function getProps(element) {
-  let props = Object.assign({}, element.props);
-  delete props.children;
-  return props;
-}
+
 function Step(props) {
   const [currentStep, setCurrentStep] = useState(props.currentIndex || 0)
   if (!isAllStepView(props.children)) {
@@ -47,11 +43,15 @@ function Step(props) {
   }
 
   return (
-    <div styleName="step-container">
+    <div styleName="step-container" className={props.className} style={props.style}>
       {props.children[currentStep]}
       <div styleName="step-nav">
-        <Button styleName="btn" type="link" onClick={() => goPre()} icon="arrow-left"></Button>
-        <Button styleName="btn" type="link" onClick={() => goNext()} icon="arrow-right"></Button>
+        <div styleName="btn" onClick={() => goPre()}>
+          <Icon type="arrow-left" />
+        </div>
+        <div styleName="btn" onClick={() => goNext()}>
+          <Icon type="arrow-right"/>
+        </div>
       </div>
     </div>
   )
@@ -60,7 +60,11 @@ Step.propTypes = {
   currentIndex: PropTypes.number,
 }
 function StepView(props) {
-  return (props.children)
+  return (
+    <div styleName="step-view">
+      {props.children}
+    </div>
+    )
 }
 StepView.propTypes = {
   id: PropTypes.string.isRequired,

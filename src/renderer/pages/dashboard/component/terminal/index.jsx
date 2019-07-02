@@ -15,7 +15,7 @@ Terminal.applyAddon(fit);
 const term = new Terminal({
   rendererType: 'canvas',
   convertEol: true,
-  scrollback: 10,
+  scrollback: 800,
   fontSize: 12,
   theme: {
     foreground: 'white',
