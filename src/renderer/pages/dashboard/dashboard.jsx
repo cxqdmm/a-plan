@@ -6,7 +6,6 @@ import { useMounted } from 'hooks';
 import NewProject from './component/newProject';
 import Terminal from './component/terminal';
 import ProjectHeader from './component/projectHeader';
-import CModal from 'component/modal';
 
 import { Button, Tooltip, Layout } from 'antd';
 import { open } from 'util/vscode';
@@ -18,21 +17,16 @@ const store = createStore(React.createContext(), DataModule)
 function Dashboard(props) {
   const [logVisible, setLogVisible] = useState(false);
 
-  function switchLog(visible) {
-    return () => setLogVisible(visible);
+  function switchLog() {
+    return () => setLogVisible(!logVisible);
   }
   useMounted(() => {
     DataModule.getEditProjectFromCache();
   })
 
   return (
-    <div>
-      <CModal 
-        visible={logVisible} 
-        onClickMask={switchLog(false)}
-        >
-          <Terminal />
-      </CModal>
+    <div styleName="root">
+      <Terminal styleName={`terminal ${!logVisible ? 'hide' : ''}`} />
       <Layout styleName="layout">
         <Header styleName="header">
           <ProjectHeader>
@@ -40,7 +34,7 @@ function Dashboard(props) {
               <Button type="link" onClick={() => {open(DataModule.project.dir)}}>编译器</Button>
             </Tooltip>
             <Tooltip placement="bottom" title="日志">
-              <Button type="link" onClick={switchLog(true)}>日志</Button>
+              <Button type="link" onClick={switchLog()}>日志</Button>
             </Tooltip>
           </ProjectHeader>
           <NewProject />

@@ -3,7 +3,7 @@ import { createStore, useRedux, connect } from 'redux';
 import terminalModule from './module';
 import { hot } from 'react-hot-loader/root';
 import { ipcRenderer } from 'electron';
-import useMounted from 'hooks/useMounted';
+import { useMounted } from 'hooks';
 import { Terminal } from 'xterm';
 import 'xterm/dist/xterm.css'
 import 'xterm/dist/addons/fullscreen/fullscreen.css';
@@ -16,6 +16,7 @@ const term = new Terminal({
   rendererType: 'canvas',
   convertEol: true,
   scrollback: 800,
+  cols: 100,
   fontSize: 12,
   theme: {
     foreground: 'white',
@@ -32,7 +33,7 @@ function enableWrite(start) {
   }).catch(error => alert(`Error reading: ${error}`));
 }
 
-function TerminalContainer() {
+function TerminalContainer(props) {
   const terminalRef = useRef(null);
 
   useMounted(() => {
@@ -56,7 +57,6 @@ function TerminalContainer() {
 
     }
   })
-
   useEffect(() => {
     if (terminalModule.shell) {
       terminalModule.shell.forEach(sl => {
@@ -66,7 +66,7 @@ function TerminalContainer() {
   }, [terminalModule.waiting])
 
   return (
-      <div ref={terminalRef} id="terminal" style={{width: '60vw', height:'60vh', padding: 5, backgroundColor: '#232527'}}></div>
+      <div ref={terminalRef} className={props.className} id="terminal"></div>
   )
 }
 export { terminalModule }

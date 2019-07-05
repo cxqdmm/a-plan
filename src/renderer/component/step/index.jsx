@@ -21,7 +21,7 @@ function Step(props) {
       const step = props.children[currentStep];
       const stepInfo = {
         from: step.props.id,
-        to: props.children[currentStep - 1].props.id,
+        status: 'back',
       }
       if (props.onClick(stepInfo)) {
         setCurrentStep(currentStep - 1);
@@ -30,28 +30,47 @@ function Step(props) {
   }
   
   function goNext() {
+    const step = props.children[currentStep];
+    const stepInfo = {
+      last: false,
+      status: 'forward',
+      from: step.props.id,
+    }
     if (currentStep < props.children.length - 1) {
-      const step = props.children[currentStep];
-      const stepInfo = {
-        from: step.props.id,
-        to: props.children[currentStep + 1].props.id,
-      }
       if (props.onClick(stepInfo)) {
         setCurrentStep(currentStep + 1);
       }
+    } else {
+      stepInfo.last = true;
+      props.onClick(stepInfo)
     }
   }
 
   return (
     <div styleName="step-container" className={props.className} style={props.style}>
+      <div styleName="step-header">
+          <span styleName="title">
+            {props.title || '标题'}
+          </span>
+          <div styleName="btn-close" onClick={() => {props.onClose()}}>
+            <Icon type="close" />
+          </div>
+      </div>
       {props.children[currentStep]}
       <div styleName="step-nav">
-        <div styleName="btn" onClick={() => goPre()}>
-          <Icon type="arrow-left" />
-        </div>
-        <div styleName="btn" onClick={() => goNext()}>
-          <Icon type="arrow-right"/>
-        </div>
+        {
+          currentStep !== 0 ? <div styleName="btn" onClick={() => goPre()}>
+            上一步
+          </div> : null
+        }
+        {
+          currentStep < props.children.length - 1 ? <div styleName="btn" onClick={() => goNext()}>
+            下一步
+          </div> : <div styleName="btn" onClick={() => goNext()}>
+            确定
+          </div>
+        }
+        
       </div>
     </div>
   )

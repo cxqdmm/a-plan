@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
-import { hot } from 'react-hot-loader/root';
-import { Button, Descriptions, Badge, Row, Col, Input, Icon } from 'antd';
+import React, { useState, useRef } from 'react';
+import path from 'path';
 import { ipcRenderer } from 'electron';
-import useMounted from 'hooks/useMounted';
-import {  terminalModule as terminal } from '../terminal';
+import { hot } from 'react-hot-loader/root';
+// component
+import { Button, Input, Icon, message } from 'antd';
 import ProjectTable from '../projectTable';
 import ProjectTemplate from '../projectTemplate';
+import ProjectForm from '../projectForm';
 import CModal from 'component/modal';
 import Step from 'component/step';
-import nedb from 'util/nedb';
+// module
+import {  terminalModule as terminal } from '../terminal';
 import dashboardModule from '../../module';
-
+// hook
+import useMounted from 'hooks/useMounted';
+// others
+import nedb from 'util/nedb';
+import { templatePath } from 'util/env';
 import './index.module.less';
 const StepView = Step.StepView;
 let db;
 function NewProject() {
+  let projectRef = useRef();
   const [visible, setVisible] = useState(false);
   const [isShowModal, setModalVisible] = useState(false);
+  const [template, setTemplate] = useState('');
   const [projectName, setProjectName] = useState('');
   const [projectDir, setProjectDir] = useState('');
   useMounted(() => {
@@ -30,15 +38,20 @@ function NewProject() {
     db.insert({
       type: 'project',
       name: projectName,
+      template: template,
       dir: projectDir + '/' + projectName,
       today: new Date(),
     })
-    terminal.runShell([`cd ${projectDir}`, `npx create-react-app ${projectName}`]);
+    terminal.runShell([
+      `cd ${projectDir}`, 
+      `mkdir ${projectName}`,
+      `cd ${projectName}`,
+      `cp -r ${path.join(templatePath,template)}/* .`,
+      'npm install',
+      'git init',
+    ]);
   }
-  function handleOk () {
-    setVisible(false);
-    startGenerateProject();
-  }
+
   function handleCancel() {
     setVisible(false);
   }
@@ -51,6 +64,7 @@ function NewProject() {
   }
   const showDialogCreate = () => {
     setVisible(true);
+    setTemplate('');
     setProjectDir('');
     setProjectName('');
   } 
@@ -58,8 +72,21 @@ function NewProject() {
     setModalVisible(true);
   }
   function stepChange(step) {
-    console.log(step)
+    if (step.from === 'step-1') {
+      if (!template) {
+        message.error('请选择一个项目模板');
+        return false;
+      }
+    } else if (step.status === 'forward' && step.from === 'step-2') {
+      if (projectRef.current.canSubmit()) {
+        startGenerateProject();
+        handleCancel();
+      }
+    }
     return true;
+  }
+  function selectTemp(temp) {
+    setTemplate(temp);
   }
   return (
     <div>
@@ -89,23 +116,33 @@ function NewProject() {
         onClickMask={handleCancel}
         >
           <Step
+            title="创建项目"
             style={{width: 500, height: 400}}
+            onClose={handleCancel}
             onClick={stepChange}
             >
             <StepView id="step-1">
-              <ProjectTemplate templates={dashboardModule.templates}/>
+              <ProjectTemplate
+                value={template} 
+                onSelect={selectTemp}
+                templates={dashboardModule.templates}
+              />
             </StepView>
             <StepView id="step-2">
               <div styleName="center">
-                <Descriptions bordered>
-                  <Descriptions.Item label="项目名" span={3}>
-                    <Input value={projectName} onChange={e =>
-                        setProjectName(e.target.value)}></Input>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="路径" span={3}>
-                    <Input addonAfter={<Icon type="folder" onClick={() => ipcRenderer.send('open-directory-dialog','openDirectory')}/>} value={projectDir} />
-                  </Descriptions.Item>
-                </Descriptions>
+                <ProjectForm ref={projectRef}>
+                  <span label="模板">{template}</span>
+                  <Input 
+                    label="项目名"
+                    message="请输入项目名"
+                    value={projectName} 
+                    onChange={e => setProjectName(e.target.value)} />
+                  <Input 
+                    label="路径"
+                    message="请选择项目路径"
+                    addonAfter={<Icon type="folder" onClick={() => ipcRenderer.send('open-directory-dialog','openDirectory')}/>} 
+                    value={projectDir} />
+                </ProjectForm>
               </div>
             </StepView>
           </Step>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, message } from 'antd';
 import Card from 'component/card';
 import { createStore, useRedux, connect } from 'redux';
 import { useMounted } from 'hooks';
@@ -13,13 +13,13 @@ const store = createStore(React.createContext(), DataModule)
 
 let db;
 function ProjectTable(props) {
-  useMounted(() => {
+  const fun = async () => {
     let doc;
-    const fun = async () => {
-      db = nedb.get('store/dashboard/project');
-      doc = await db.find({type: 'project'});
-      DataModule.setList(doc || []);
-    };
+    db = nedb.get('store/dashboard/project');
+    doc = await db.find({type: 'project'});
+    DataModule.setList(doc || []);
+  };
+  useMounted(() => {
     fun();
   })
 
@@ -31,7 +31,14 @@ function ProjectTable(props) {
       <Card.Body>
         {
           DataModule.projectList.map((item, key) => {
-            return <ListItem key={key} {...item} selectProject={() => {props.selectProject(item)}}/>
+            return <ListItem key={key} {...item} selectProject={() => {props.selectProject(item)}} delete={() => {
+              db.remove({today: item.today}).then(() => {
+                message.success('删除成功');
+                fun();
+              }).catch(e => {
+                message.error('删除失败');
+              });
+            }}/>
           })
         }
       </Card.Body>
@@ -48,6 +55,7 @@ function ListItem(props) {
   </Col>
   <Col span={12} order={2}>
     <Button type="link" onClick={() => open(props.dir)}>vscode</Button>
+    <Button type="link" icon="delete" onClick={() => { props.delete()}}></Button>
   </Col>
 </Row>
 }

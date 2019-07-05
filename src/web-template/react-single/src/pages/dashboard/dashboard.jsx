@@ -11,11 +11,6 @@ const { Header, Footer, Content } = Layout;
 const store = createStore(React.createContext(), DataModule)
 
 function Dashboard(props) {
-
-  useMounted(() => {
-    DataModule.getEditProjectFromCache();
-  })
-
   return (
     <div>
       <Layout styleName="layout">

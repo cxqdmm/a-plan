@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+.temp-item {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: @border-radius-base;
+  height: 100px;
+  width: 100px;
+  box-shadow: @box-shadow-base;
+  cursor: pointer;
+  .i-select {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: @primary-color;
+  }
+  &:hover {
+    color: @primary-color;
+    background-color: @second-color;
+  }
+}
