@@ -335,6 +335,7 @@ module.exports = function(webpackEnv) {
         'root': path.resolve(process.cwd(), './src/renderer'),
         'redux': path.resolve(process.cwd(), './src/renderer/redux'),
         'css': path.resolve(process.cwd(), './src/renderer/css'),
+        'static': path.resolve(process.cwd(), './src/renderer/static'),
         'react-dom': '@hot-loader/react-dom',
       },
       plugins: [

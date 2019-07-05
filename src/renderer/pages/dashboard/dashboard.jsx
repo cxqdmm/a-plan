@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-
+import styled from 'styled-components';
 import { createStore, useRedux } from 'redux';
-import DataModule from './module';
 import { useMounted } from 'hooks';
+
+import DataModule from './module';
+
 import NewProject from './component/newProject';
 import Terminal from './component/terminal';
-import ProjectHeader from './component/projectHeader';
-
-import { Button, Tooltip, Layout } from 'antd';
+import Button from 'component/button';
+import ImgIcon from 'component/imgIcon';
+import { Tooltip, Layout } from 'antd';
 import { open } from 'util/vscode';
 import './index.module.less';
 const { Header, Footer, Content } = Layout;
@@ -29,14 +31,16 @@ function Dashboard(props) {
       <Terminal styleName={`terminal ${!logVisible ? 'hide' : ''}`} />
       <Layout styleName="layout">
         <Header styleName="header">
-          <ProjectHeader>
+          <div className="flex align-center flex-1">
+            <ImgIcon size="large" src={require('static/images/icon-project.png')} />
+            <ProjectName>{DataModule.project.name}</ProjectName>
             <Tooltip placement="bottom" title="在vscode中打开">
-              <Button type="link" onClick={() => {open(DataModule.project.dir)}}>编译器</Button>
+              <Button type="link" onClick={() => { open(DataModule.project.dir) }}>编译器</Button>
             </Tooltip>
             <Tooltip placement="bottom" title="日志">
               <Button type="link" onClick={switchLog()}>日志</Button>
             </Tooltip>
-          </ProjectHeader>
+          </div>
           <NewProject />
         </Header>
         <Content>
@@ -49,3 +53,10 @@ function Dashboard(props) {
   )
 }
 export default useRedux(store)(Dashboard);
+
+const ProjectName = styled.span`
+  font-weight: 600;
+  user-select: none;
+  font-size: 24px;
+  margin-left: 10px;
+`
