@@ -8,6 +8,7 @@ const webpack = require('webpack')
 process.env.NODE_ENV = 'development'
 const mainConfig = require('../config/main/webpack.config.main')
 
+process.env.BROWSER = 'none';
 let electronProcess = null
 let manualRestart = false
 
@@ -34,13 +35,15 @@ function logStats (proc, data) {
 }
 
 function startRenderer () {
-  spawn('npm',['run','start']);
+  spawn('npm',['run','start-renderer'], {
+    env: process.env,
+  });
 }
 
 function startMain () {
   return new Promise((resolve, reject) => {
-    mainConfig.mode = 'development'
-    const compiler = webpack(mainConfig)
+    const config = mainConfig('development')
+    const compiler = webpack(config)
 
     compiler.hooks.watchRun.tapAsync('watch-run', (compilation, done) => {
       logStats('Main', chalk.white.bold('compiling...'))
@@ -73,7 +76,7 @@ function startMain () {
 
 function startElectron () {
   var args = [
-    '--inspect-brk=5858',
+    '--inspect=5858',
     path.join(__dirname, '../dist/electron/main.js')
   ]
 

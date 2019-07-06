@@ -10,47 +10,52 @@ fs.readdirSync('node_modules')
     .forEach(function(mod) {
         nodeModules[mod] = 'commonjs ' + mod;
     });
-let mainConfig = {
-  context: __dirname,
-  node: {
-      __filename: false,
-      __dirname: false
-  },
-  devtool: 'source-map',
-  entry: {
-    main: path.join(__dirname, '../../src/main/index.js')
-  },
-  output: {
-    filename: '[name].js',
-    libraryTarget: 'commonjs2',
-    path: path.join(__dirname, '../../dist/electron')
-  },
-  externals: nodeModules,
-  module: {
-    rules: [{
-        test: /\.js$/,
-        exclude:/(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-          }
-        },
-    }, {
-        test: /\.json$/,
-        loader: 'json-loader'
-    }]
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': 'development'
-    }),
-  ],
-  resolve: {
-    extensions: ['.js', '.json', '.node']
-  },
-  target: 'electron-main'
+function webpackConfig(mode = 'development') {
+  return {
+    context: __dirname,
+    mode: mode,
+    node: {
+        __filename: false,
+        __dirname: false
+    },
+    devtool: 'source-map',
+    entry: [
+      'webpack/hot/poll?1000',
+      path.join(__dirname, '../../src/main/index.js')
+    ],
+    output: {
+      filename: 'main.js',
+      libraryTarget: 'commonjs2',
+      path: path.join(__dirname, '../../dist/electron')
+    },
+    externals: nodeModules,
+    module: {
+      rules: [{
+          test: /\.js$/,
+          exclude:/(node_modules|bower_components)/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+            }
+          },
+      }, {
+          test: /\.json$/,
+          loader: 'json-loader'
+      }]
+    },
+    plugins: [
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': 'development'
+      }),
+    ],
+    resolve: {
+      extensions: ['.js', '.json', '.node']
+    },
+    target: 'electron-main'
+  }
 }
 
-module.exports = mainConfig
+module.exports = webpackConfig
 

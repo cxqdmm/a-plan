@@ -7,6 +7,7 @@ const { launchTerminal } = require('./terminal');
 const path = require('path');
 const isDev = require('electron-is-dev');
 let mainWindow;
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 900, 
@@ -50,3 +51,9 @@ ipcMain.on('open-directory-dialog', (event, p) => {
 
 // 驱动终端
 launchTerminal(ipcMain);
+
+if (module.hot) {
+  module.hot.accept('./terminal.js', function() {
+      require('./terminal.js');
+  });
+}

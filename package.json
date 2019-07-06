@@ -14,14 +14,11 @@
     "start-renderer": "node scripts/start-renderer.js",
     "build-renderer": "node scripts/build-renderer.js",
     "test-renderer": "node scripts/test-renderer.js",
+    "start": "node ./scripts/start.js",
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --mac",
-    "electron-dev": "concurrently \"BROWSER=none npm run start-renderer\" \"electron --inspect=5858 .\"",
-    "fix": "eslint --fix",
-    "start": "node ./scripts/start.js",
-    "start-dev": "electron --inspect-brk=5858 ./dist/electron/main",
-    "dev": "concurrently \"BROWSER=none npm run start-renderer\" \"electron --inspect=5858 ./dist/electron/main.js\""
+    "fix": "eslint --fix"
   },
   "build": {
     "appId": "com.aplan.aplan-electron",
