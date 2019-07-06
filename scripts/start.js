@@ -3,22 +3,43 @@
 const chalk = require('chalk')
 const electron = require('electron')
 const path = require('path')
-const { spawn } = require('child_process')
+const { spawn, exec } = require('child_process')
 const webpack = require('webpack')
-process.env.NODE_ENV = 'development'
 const mainConfig = require('../config/main/webpack.config.main')
-
 process.env.BROWSER = 'none';
+
+function killPort(port) {
+  exec(`lsof -i:${port}`, function (err, stdout, stderr) {
+    if (err) { return console.log(err); }
+
+    stdout.split('\n').filter(function (line) {
+      var p = line.trim().split(/\s+/);
+      var pid = p[1];
+
+      if (!isNaN(+pid)) {
+        exec(`kill -9 ${pid}`, function (err, stdout, stderr) {
+          if (err) {
+            return console.log('释放指定端口失败！！');
+          }
+
+          console.log('占用指定端口的程序被成功杀掉！');
+        });
+
+      }
+    });
+  });
+}
+
 let electronProcess = null
 let manualRestart = false
 
-function logStats (proc, data) {
+function logStats(proc, data, color) {
   let log = ''
 
-  log += chalk.yellow.bold(`┏ ${proc} Process ${new Array((19 - proc.length) + 1).join('-')}`)
+  log += chalk[color].bold(`┏ ${proc} Process ${new Array((19 - proc.length) + 1).join('-')}`)
   log += '\n\n'
 
-  if (typeof data === 'object') {
+  if (data.constructor.name === 'Stats') {
     data.toString({
       colors: true,
       chunks: false
@@ -29,24 +50,32 @@ function logStats (proc, data) {
     log += `  ${data}\n`
   }
 
-  log += '\n' + chalk.yellow.bold(`┗ ${new Array(28 + 1).join('-')}`) + '\n'
+  log += '\n' + chalk[color].bold(`┗ ${new Array(28 + 1).join('-')}`) + '\n'
 
   console.log(log)
 }
 
-function startRenderer () {
-  spawn('npm',['run','start-renderer'], {
-    env: process.env,
-  });
+function startRenderer() {
+  return new Promise((resolve, reject) => {
+    const rendererProcess = spawn('node', ['scripts/start-renderer.js'], {
+      env: process.env,
+    });
+    rendererProcess.stdout.on('data', data => {
+      logStats('渲染进程build', data, 'blue');
+      if (data.toString() === 'renderer complete') {
+        resolve();
+      }
+    })
+  })
 }
 
-function startMain () {
+function startMain() {
   return new Promise((resolve, reject) => {
     const config = mainConfig('development')
     const compiler = webpack(config)
 
     compiler.hooks.watchRun.tapAsync('watch-run', (compilation, done) => {
-      logStats('Main', chalk.white.bold('compiling...'))
+      logStats('主线程build', chalk.white.bold('compiling...'), 'blue')
       done()
     })
 
@@ -56,13 +85,13 @@ function startMain () {
         return
       }
 
-      logStats('Main', stats)
+      logStats('主线程build', stats, 'blue')
 
       if (electronProcess && electronProcess.kill) {
         manualRestart = true
         process.kill(electronProcess.pid)
         electronProcess = null
-        // startElectron()
+        startElectron()
 
         setTimeout(() => {
           manualRestart = false
@@ -74,19 +103,19 @@ function startMain () {
   })
 }
 
-function startElectron () {
+function startElectron() {
   var args = [
     '--inspect=5858',
     path.join(__dirname, '../dist/electron/main.js')
   ]
 
   electronProcess = spawn(electron, args)
-  
+
   electronProcess.stdout.on('data', data => {
-    electronLog(data, 'blue')
+    logStats('Electron', data, 'blue')
   })
   electronProcess.stderr.on('data', data => {
-    electronLog(data, 'red')
+    logStats('Electron', data, 'red')
   })
 
   electronProcess.on('close', () => {
@@ -94,31 +123,10 @@ function startElectron () {
   })
 }
 
-function electronLog (data, color) {
-  let log = ''
-  data = data.toString().split(/\r?\n/)
-  data.forEach(line => {
-    log += `  ${line}\n`
-  })
-  if (/[0-9A-z]+/.test(log)) {
-    console.log(
-      chalk[color].bold('┏ Electron -------------------') +
-      '\n\n' +
-      log +
-      chalk[color].bold('┗ ----------------------------') +
-      '\n'
-    )
-  }
-}
 
-function greeting () {
+function init() {
   console.log(chalk.blue('  getting ready...') + '\n')
-}
-
-function init () {
-  greeting()
-  startRenderer();
-  Promise.all([startMain()])
+  Promise.all([startRenderer(), startMain()])
     .then(() => {
       startElectron()
     })

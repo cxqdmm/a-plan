@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "开发环境",
       "program": "${workspaceFolder}/scripts/start.js"
     },
     {

@@ -105,6 +105,10 @@ checkBrowsers(paths.appPath, isInteractive)
       urls.lanUrlForConfig
     );
     const devServer = new WebpackDevServer(compiler, serverConfig);
+    compiler.hooks.done.tapAsync('renderer-done',(stats, done) => {
+      process.stdout.write('renderer complete');
+      done();
+    })
     // Launch WebpackDevServer.
     devServer.listen(port, HOST, err => {
       if (err) {

@@ -13,7 +13,6 @@
     "rebuild": "electron-rebuild -f -w node-pty",
     "start-renderer": "node scripts/start-renderer.js",
     "build-renderer": "node scripts/build-renderer.js",
-    "test-renderer": "node scripts/test-renderer.js",
     "start": "node ./scripts/start.js",
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",

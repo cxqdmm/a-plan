@@ -20,7 +20,7 @@ function webpackConfig(mode = 'development') {
     },
     devtool: 'source-map',
     entry: [
-      'webpack/hot/poll?1000',
+      // 'webpack/hot/poll?1000',
       path.join(__dirname, '../../src/main/index.js')
     ],
     output: {
@@ -45,7 +45,7 @@ function webpackConfig(mode = 'development') {
       }]
     },
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+      // new webpack.HotModuleReplacementPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': 'development'
       }),
