@@ -26,9 +26,9 @@ class DbInstance {
       })
     })
   }
-  remove(target) {
+  remove(target, multi = false) {
     return new Promise((resolve, reject) => {
-      this.db.remove(target, function(err, doc) {
+      this.db.remove(target, { multi: multi }, function(err, doc) {
         if (err) {
           reject(err);
         } else {

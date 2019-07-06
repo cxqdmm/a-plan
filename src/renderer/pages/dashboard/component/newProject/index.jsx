@@ -3,12 +3,13 @@ import path from 'path';
 import { ipcRenderer } from 'electron';
 import { hot } from 'react-hot-loader/root';
 // component
-import { Button, Input, Icon, message } from 'antd';
+import {  Input, Icon, message } from 'antd';
 import ProjectTable from '../projectTable';
 import ProjectTemplate from '../projectTemplate';
 import ProjectForm from '../projectForm';
 import CModal from 'component/modal';
 import Step from 'component/step';
+import Button from 'component/button';
 // module
 import {  terminalModule as terminal } from '../terminal';
 import dashboardModule from '../../module';

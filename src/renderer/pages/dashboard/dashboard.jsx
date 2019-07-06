@@ -6,11 +6,11 @@ import { useMounted } from 'hooks';
 import DataModule from './module';
 
 import NewProject from './component/newProject';
-import Terminal from './component/terminal';
+import Terminal, { terminalModule } from './component/terminal';
 import Button from 'component/button';
 import ImgIcon from 'component/imgIcon';
 import { Tooltip, Layout } from 'antd';
-import { open } from 'util/vscode';
+import { open, } from 'util/vscode';
 import './index.module.less';
 const { Header, Footer, Content } = Layout;
 
@@ -39,6 +39,9 @@ function Dashboard(props) {
             </Tooltip>
             <Tooltip placement="bottom" title="日志">
               <Button type="link" size="small" icon="code" onClick={switchLog()}>日志</Button>
+            </Tooltip>
+            <Tooltip placement="bottom" title="运行">
+              <Button type="link" size="small" icon="chrome" onClick={() => terminalModule.runShell([`cd ${DataModule.project.dir}`, 'npm run start'])}>启动调试</Button>
             </Tooltip>
           </div>
           <NewProject />
