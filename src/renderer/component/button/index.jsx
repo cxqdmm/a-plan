@@ -99,9 +99,9 @@ function Button(props) {
   return (
     <Btn {...props}>
       {
-        props.icon ? <Icon type={props.icon}/> : null
+        props.icon ? <Icon type={props.icon} /> : null
       }
-      <span>{props.children}</span>
+      <span style={{marginLeft: props.icon ? 5 : 0}}>{props.children}</span>
     </Btn>
   )
 

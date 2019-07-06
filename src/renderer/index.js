@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import './css/common.less';
 import Layout from './layout';
+
 ReactDOM.render(<Layout />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

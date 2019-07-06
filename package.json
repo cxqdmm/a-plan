@@ -11,14 +11,15 @@
   "main": "src/main/index.js",
   "scripts": {
     "rebuild": "electron-rebuild -f -w node-pty",
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
+    "start-renderer": "node scripts/start-renderer.js",
+    "build-renderer": "node scripts/build-renderer.js",
+    "test-renderer": "node scripts/test-renderer.js",
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --mac",
-    "electron-dev": "concurrently \"BROWSER=none IS_ELECTRON=true npm run start\" \"electron --inspect=5858 .\"",
-    "fix": "eslint --fix"
+    "electron-dev": "concurrently \"BROWSER=none npm run start-renderer\" \"electron --inspect=5858 .\"",
+    "fix": "eslint --fix",
+    "start": "node ./scripts/start.js"
   },
   "build": {
     "appId": "com.aplan.aplan-electron",

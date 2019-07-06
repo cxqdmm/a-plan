@@ -6,6 +6,12 @@
   "configurations": [
     {
       "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/scripts/start.js"
+    },
+    {
+      "type": "node",
       "request": "attach",
       "name": "Attach electron main",
       "port": 5858,

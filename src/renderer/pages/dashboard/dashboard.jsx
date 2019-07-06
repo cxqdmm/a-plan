@@ -33,12 +33,12 @@ function Dashboard(props) {
         <Header styleName="header">
           <div className="flex align-center flex-1">
             <ImgIcon size="large" src={require('static/images/icon-project.png')} />
-            <ProjectName>{DataModule.project.name}</ProjectName>
+            <ProjectName><span>{DataModule.project.name}</span></ProjectName>
             <Tooltip placement="bottom" title="在vscode中打开">
-              <Button type="link" onClick={() => { open(DataModule.project.dir) }}>编译器</Button>
+              <Button type="link" size="small" icon="edit" onClick={() => { open(DataModule.project.dir) }}>编译器</Button>
             </Tooltip>
             <Tooltip placement="bottom" title="日志">
-              <Button type="link" onClick={switchLog()}>日志</Button>
+              <Button type="link" size="small" icon="code" onClick={switchLog()}>日志</Button>
             </Tooltip>
           </div>
           <NewProject />
@@ -54,9 +54,12 @@ function Dashboard(props) {
 }
 export default useRedux(store)(Dashboard);
 
-const ProjectName = styled.span`
+const ProjectName = styled.div`
+  display: inline-flex;
+  align-items: center;
   font-weight: 600;
   user-select: none;
-  font-size: 24px;
+  font-size: 20px;
   margin-left: 10px;
+  white-space: nowrap;
 `
