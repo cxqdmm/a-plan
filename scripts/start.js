@@ -73,7 +73,7 @@ function startMain () {
 
 function startElectron () {
   var args = [
-    '--inspect=5859',
+    '--inspect-brk=5858',
     path.join(__dirname, '../dist/electron/main.js')
   ]
 
@@ -117,7 +117,7 @@ function init () {
   startRenderer();
   Promise.all([startMain()])
     .then(() => {
-      // startElectron()
+      startElectron()
     })
     .catch(err => {
       console.error(err)

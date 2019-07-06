@@ -19,7 +19,9 @@
     "dist": "electron-builder --mac",
     "electron-dev": "concurrently \"BROWSER=none npm run start-renderer\" \"electron --inspect=5858 .\"",
     "fix": "eslint --fix",
-    "start": "node ./scripts/start.js"
+    "start": "node ./scripts/start.js",
+    "start-dev": "electron --inspect-brk=5858 ./dist/electron/main",
+    "dev": "concurrently \"BROWSER=none npm run start-renderer\" \"electron --inspect=5858 ./dist/electron/main.js\""
   },
   "build": {
     "appId": "com.aplan.aplan-electron",
@@ -68,6 +70,7 @@
     "babel-preset-react-app": "^8.0.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "codemirror": "^5.47.0",
+    "core-js": "^3.1.4",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
@@ -96,6 +99,7 @@
     "mini-css-extract-plugin": "0.5.0",
     "moment": "^2.24.0",
     "nedb": "^1.8.0",
+    "node-loader": "^0.6.0",
     "node-pty": "^0.8.1",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
@@ -203,27 +207,6 @@
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ],
-    "plugins": [
-      "react-hot-loader/babel",
-      [
-        "@babel/plugin-proposal-decorators",
-        {
-          "legacy": true
-        }
-      ],
-      [
-        "import",
-        {
-          "libraryName": "antd",
-          "style": true
-        }
-      ]
     ]
   }
 }
