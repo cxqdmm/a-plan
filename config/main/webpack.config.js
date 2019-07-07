@@ -26,7 +26,7 @@ function webpackConfig(mode = 'development') {
     output: {
       filename: 'main.js',
       libraryTarget: 'commonjs2',
-      path: path.join(__dirname, '../../dist/electron')
+      path: path.join(__dirname, '../../dist/main')
     },
     externals: nodeModules,
     module: {

@@ -5,7 +5,7 @@ const electron = require('electron')
 const path = require('path')
 const { spawn, exec } = require('child_process')
 const webpack = require('webpack')
-const mainConfig = require('../config/main/webpack.config.main')
+const mainConfig = require('../config/main/webpack.config')
 process.env.BROWSER = 'none';
 
 function killPort(port) {

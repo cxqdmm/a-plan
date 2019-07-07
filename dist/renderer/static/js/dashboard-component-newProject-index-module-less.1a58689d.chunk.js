@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["dashboard-component-newProject-index-module-less"],{"/ehR":function(e,n,o){e.exports={project:"src-renderer-pages-dashboard-component-newProject-___index-module__project___1tKwH","btn-new":"src-renderer-pages-dashboard-component-newProject-___index-module__btn-new___37pbC",center:"src-renderer-pages-dashboard-component-newProject-___index-module__center___1q0tG"}}}]);
+//# sourceMappingURL=dashboard-component-newProject-index-module-less.1a58689d.chunk.js.map
