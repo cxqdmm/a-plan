@@ -1,11 +1,11 @@
 // 项目控制器模块
 import { message } from 'antd';
 import nedb from 'util/nedb';
+import moment from 'moment';
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process')
 const os = require('os');
-
 /**
  * 负责管理当前项目
 .
@@ -42,6 +42,7 @@ class Project {
       const stats = fs.statSync(filepath);
       stats.name = page;
       stats.path = filepath;
+      stats.mtime = moment(stats.mtime).format('YYYY-MM-DD HH:mm:ss')
       out.push(stats);
       return out;
     }, [])

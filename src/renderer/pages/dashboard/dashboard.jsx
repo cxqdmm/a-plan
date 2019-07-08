@@ -10,7 +10,7 @@ import PagePanel from './component/pagePanel';
 import Terminal, { terminalModule } from './component/terminal';
 import Button from 'component/button';
 import ImgIcon from 'component/imgIcon';
-import { Tooltip, Layout, Divider } from 'antd';
+import { Tooltip, Layout, Divider, Row, Col } from 'antd';
 import './index.module.less';
 
 import DataModule from './module';
@@ -52,12 +52,12 @@ function Dashboard(props) {
           </div>
           <NewProject />
         </Header>
-        <Content style={{padding: 20, overflowY: 'auto'}}>
-          <PagePanel title="页面" pages={DataModule.pages}/>
-          <PagePanel title="页面" pages={DataModule.pages}/>
-          <PagePanel title="页面" pages={DataModule.pages}/>
-          <PagePanel title="页面" pages={DataModule.pages}/>
-          <PagePanel title="页面" pages={DataModule.pages}/>
+        <Content styleName="body">
+        <Row gutter={{ xs: 8, sm: 16, md: 24}}>
+          <Col xs={12}>
+            <PagePanel title="页面" pages={DataModule.pages}/>
+          </Col>
+        </Row>
         </Content>
         <Footer styleName="footer">
         </Footer>
