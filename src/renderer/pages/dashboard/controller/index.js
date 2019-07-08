@@ -1,6 +1,7 @@
 // 项目控制器模块
 import { message } from 'antd';
 import nedb from 'util/nedb';
+import { objToArray } from 'util/common';
 import moment from 'moment';
 const fs = require('fs');
 const path = require('path');
@@ -30,12 +31,15 @@ class Project {
       this.cache.clear();
     }
   }
+  get dir() {
+    return this._project.dir;
+  }
   get pages() {
     let pages = this.cache.get('pages')
     if (pages) {
       return pages;
     }
-    const pageDir = path.resolve(this._project.dir,'src/pages');
+    const pageDir = path.join(this._project.dir,'src/pages');
     pages = fs.readdirSync(pageDir);
     const pageInfo = pages.reduce((out, page) => {
       const filepath = path.join(pageDir, page);
@@ -48,6 +52,28 @@ class Project {
     }, [])
     this.cache.set('pages', pageInfo);
     return pageInfo;
+  }
+  get dependency() {
+    let dependency = this.cache.get('dependency')
+    if (dependency) {
+      return dependency;
+    }
+    const packagePath =  path.join(this._project.dir, 'package.json');
+    try {
+      const json = JSON.parse(fs.readFileSync(packagePath).toString());
+      json.dependencies = 
+      dependency = {
+        dependencies: objToArray(json.dependencies),
+        devDependencies: objToArray(json.devDependencies),
+      }
+      this.cache.set('dependency', dependency);
+    } catch (error) {
+      dependency = {
+        dependencies: [],
+        devDependencies: [],
+      }
+    }
+    return dependency;
   }
 }
 class EditProjectController {
@@ -103,6 +129,10 @@ class EditProjectController {
   // 获取页面配置信息
   getPages() {
     return this.project.pages;
+  }
+  // 获取依赖
+  getDependency() {
+    return this.project.dependency;
   }
   openInVscode() {
     if (!this.project.dir) {

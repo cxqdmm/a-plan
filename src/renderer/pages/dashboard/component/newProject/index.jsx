@@ -93,7 +93,6 @@ function NewProject() {
       <Button 
         type="primary" 
         shape="round"
-        size="small"
         onClick={showProjectList}
         >项目管理</Button>
       <CModal 

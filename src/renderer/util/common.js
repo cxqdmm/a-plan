@@ -18,6 +18,16 @@ export function debounce(fn, time) {
   }
 }
 
+export function objToArray(obj = {}) {
+  return Object.keys(obj).reduce((out, item) => {
+    out.push({
+      name: item,
+      value: obj[item],
+    })
+    return out;
+  }, []);
+}
+
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 

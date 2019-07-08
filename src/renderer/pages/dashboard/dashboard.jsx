@@ -7,6 +7,7 @@ import { hot } from 'react-hot-loader/root';
 
 import NewProject from './component/newProject';
 import PagePanel from './component/pagePanel';
+import Dependency from './component/dependencyPanel';
 import Terminal, { terminalModule } from './component/terminal';
 import Button from 'component/button';
 import ImgIcon from 'component/imgIcon';
@@ -56,6 +57,9 @@ function Dashboard(props) {
         <Row gutter={{ xs: 8, sm: 16, md: 24}}>
           <Col xs={12}>
             <PagePanel title="页面" pages={DataModule.pages}/>
+          </Col>
+          <Col xs={12}>
+            <Dependency dep={DataModule.dependency}/>
           </Col>
         </Row>
         </Content>

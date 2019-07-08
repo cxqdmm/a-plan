@@ -8,6 +8,7 @@ class Module {
   @observable project = {}
   @observable templates = []
   @observable pages = []
+  @observable dependency = {}
   setEditProject(project = {}) {
     ctrl.setEditProject(project);
     this.setState({
@@ -20,10 +21,12 @@ class Module {
     const templates = getTemplate();
     const project = await ctrl.getProject();
     const pages = ctrl.getPages();
+    const dependency = ctrl.getDependency();
     this.setState({
       templates: templates,
       project: project,
       pages: pages,
+      dependency: dependency,
     })
   }
 }
