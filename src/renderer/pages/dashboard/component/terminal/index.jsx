@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import styled from 'styled-components';
 import { createStore, useRedux, connect } from 'redux';
 import terminalModule from './module';
 import { hot } from 'react-hot-loader/root';
@@ -11,7 +12,7 @@ import LocalEchoController from './util/LocalEchoController';
 
 import * as fit from 'xterm/lib/addons/fit/fit';
 const store = createStore(React.createContext(), terminalModule)
-Terminal.applyAddon(fit); 
+Terminal.applyAddon(fit);
 const term = new Terminal({
   rendererType: 'canvas',
   convertEol: true,
@@ -26,11 +27,11 @@ const term = new Terminal({
 });
 let localEcho;
 
-function enableWrite(start) { 
+function enableWrite(start) {
   localEcho.read(start)
-  .then(input => {
-    terminalModule.runShell([input])
-  }).catch(error => alert(`Error reading: ${error}`));
+    .then(input => {
+      terminalModule.runShell([input])
+    }).catch(error => alert(`Error reading: ${error}`));
 }
 
 function TerminalContainer(props) {
@@ -48,7 +49,7 @@ function TerminalContainer(props) {
         localEcho.nextStart = value;
       }
       if (/\[?2004h/.test(value)) {
-        enableWrite( localEcho.nextStart );
+        enableWrite(localEcho.nextStart);
       }
     }
     ipcRenderer.on('shell-out', listener)
@@ -65,9 +66,32 @@ function TerminalContainer(props) {
     }
   }, [terminalModule.waiting])
 
+  useEffect(() => {
+    if (props.visible) {
+      term.fit();
+    }
+  },[props.visible])
   return (
-      <div ref={terminalRef} className={props.className} id="terminal"></div>
+    <Termianl visible={props.visible} >
+      <div ref={terminalRef} id="terminal"></div>
+    </Termianl>
   )
 }
 export { terminalModule }
 export default useRedux(store)(hot(connect(terminalModule)(TerminalContainer)));
+
+const Termianl = styled.div`
+  position: absolute;
+  z-index: 1000;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 5;
+  user-select: none;
+  background-color: #232527;
+  left: ${props => props.visible ? 0 : '10000px'};
+  #terminal {
+    height: 100%;
+  }
+`

@@ -1,53 +1,29 @@
 import { observable } from 'redux';
 import nedb from 'util/nedb';
 import { getTemplate } from 'util/common';
-const db = nedb.createDb({
-  filename: 'store/dashboard/project',
-  autoload: true,
-})
+import ctrl from '../controller';
 
 class Module {
   nedb = nedb;
   @observable project = {}
   @observable templates = []
+  @observable pages = []
   setEditProject(project = {}) {
-    db.find({ type: 'editProject' }).then(([...params]) => {
-      if (params.length > 1) {
-        db.remove({ type: 'editProject' }, true).then(() => {
-          db.insert({
-            type: 'editProject',
-            name: project.name,
-            dir: project.dir,
-          })
-        })
-      } else if (params.length === 1) {
-        db.update({ type: 'editProject' }, {
-          name: project.name,
-          dir: project.dir,
-        })
-      } else {
-        db.insert({
-          type: 'editProject',
-          name: project.name,
-          dir: project.dir,
-        })
-      }
-    })
+    ctrl.setEditProject(project);
     this.setState({
       project: project,
     })
   }
-  async getEditProjectFromCache() {
-    let doc;
-    doc = await db.find({ type: 'editProject' });
-    this.setState({
-      project: doc[0] || {},
-    })
-  }
-  getTemplate() {
+
+  // 模块初始化
+  async init() {
     const templates = getTemplate();
+    const project = await ctrl.getProject();
+    const pages = ctrl.getPages();
     this.setState({
       templates: templates,
+      project: project,
+      pages: pages,
     })
   }
 }

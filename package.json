@@ -7,8 +7,6 @@
   "description": "web-builder",
   "version": "0.1.0",
   "private": true,
-  "homepage": "./",
-  "main": "src/main/index.js",
   "scripts": {
     "rebuild": "electron-rebuild -f -w node-pty",
     "start-renderer": "node scripts/start-renderer.js",

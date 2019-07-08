@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { createStore, useRedux } from 'redux';
 import { useMounted } from 'hooks';
+import { hot } from 'react-hot-loader/root';
 
-import DataModule from './module';
 
 import NewProject from './component/newProject';
+import PagePanel from './component/pagePanel';
 import Terminal, { terminalModule } from './component/terminal';
 import Button from 'component/button';
 import ImgIcon from 'component/imgIcon';
-import { Tooltip, Layout } from 'antd';
-import { open, } from 'util/vscode';
+import { Tooltip, Layout, Divider } from 'antd';
 import './index.module.less';
+
+import DataModule from './module';
+
+import controller from './controller';
 const { Header, Footer, Content } = Layout;
 
 const store = createStore(React.createContext(), DataModule)
@@ -23,31 +27,37 @@ function Dashboard(props) {
     return () => setLogVisible(!logVisible);
   }
   useMounted(() => {
-    DataModule.getEditProjectFromCache();
+    DataModule.init();
   })
 
   return (
     <div styleName="root">
-      <Terminal styleName={`terminal ${!logVisible ? 'hide' : ''}`} />
+      <Terminal  visible={logVisible} />
       <Layout styleName="layout">
         <Header styleName="header">
           <div className="flex align-center flex-1">
-            <ImgIcon size="large" src={require('static/images/icon-project.png')} />
+            <ImgIcon size="middle" src={require('static/images/icon-project.png')} />
             <ProjectName><span>{DataModule.project.name}</span></ProjectName>
+            <Divider type="vertical" />
             <Tooltip placement="bottom" title="在vscode中打开">
-              <Button type="link" size="small" icon="edit" onClick={() => { open(DataModule.project.dir) }}>编译器</Button>
+              <Button type="light" shape="round" size="small" icon="edit" onClick={() => { controller.openInVscode() }}>编译器</Button>
             </Tooltip>
             <Tooltip placement="bottom" title="日志">
-              <Button type="link" size="small" icon="code" onClick={switchLog()}>日志</Button>
+              <Button type="light" style={{marginLeft: 10}}  shape="round" size="small" icon="code" onClick={switchLog()}>日志</Button>
             </Tooltip>
             <Tooltip placement="bottom" title="运行">
-              <Button type="link" size="small" icon="chrome" onClick={() => terminalModule.runShell([`cd ${DataModule.project.dir}`, 'npm run start'])}>启动调试</Button>
+              <Button type="light" style={{marginLeft: 10}} shape="round" size="small" icon="chrome" onClick={() => terminalModule.runShell([`cd ${DataModule.project.dir}`, 'npm run start'])}>启动调试</Button>
             </Tooltip>
+            <Divider type="vertical" />
           </div>
           <NewProject />
         </Header>
-        <Content>
-
+        <Content style={{padding: 20, overflowY: 'auto'}}>
+          <PagePanel title="页面" pages={DataModule.pages}/>
+          <PagePanel title="页面" pages={DataModule.pages}/>
+          <PagePanel title="页面" pages={DataModule.pages}/>
+          <PagePanel title="页面" pages={DataModule.pages}/>
+          <PagePanel title="页面" pages={DataModule.pages}/>
         </Content>
         <Footer styleName="footer">
         </Footer>
@@ -55,14 +65,14 @@ function Dashboard(props) {
     </div>
   )
 }
-export default useRedux(store)(Dashboard);
+export default useRedux(store)(hot(Dashboard));
 
 const ProjectName = styled.div`
   display: inline-flex;
   align-items: center;
   font-weight: 600;
   user-select: none;
-  font-size: 20px;
+  font-size: 16px;
   margin-left: 10px;
   white-space: nowrap;
 `

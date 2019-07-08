@@ -5,6 +5,7 @@
   flex: 0 0 80px;
   background-color: @primary-color;
   .menu-item {
+    position: relative;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -15,9 +16,20 @@
     text-align: center;
     span {
       margin-top: 5px;
+      font-size: 12px;
     }
     &.highlight {
       opacity: 1;
+      background: linear-gradient(90deg, #43A0FF, @primary-color); 
+      &::after {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 4px;
+        top: 0;
+        left: 0;
+        background-color: #fff;
+      }
     }
   }
   .font {

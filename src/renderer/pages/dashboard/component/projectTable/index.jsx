@@ -5,7 +5,6 @@ import Card from 'component/card';
 import { createStore, useRedux, connect } from 'redux';
 import { useMounted } from 'hooks';
 import DataModule from './module';
-import { open } from 'util/vscode';
 import nedb from 'util/nedb';
 import './index.module.less';
 const store = createStore(React.createContext(), DataModule)
@@ -54,7 +53,6 @@ function ListItem(props) {
     <span styleName="btn-default hover" onClick={() => props.selectProject()}>{props.name}</span>
   </Col>
   <Col span={12} order={2}>
-    <Button type="link" onClick={() => open(props.dir)}>vscode</Button>
     <Button type="link" icon="delete" onClick={() => { props.delete()}}></Button>
   </Col>
 </Row>

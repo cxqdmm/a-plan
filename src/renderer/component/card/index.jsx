@@ -23,7 +23,7 @@ function Body(props) {
 
 
   return (
-    <div styleName="body">
+    <div styleName="body" className={props.className} style={props.style}>
       {props.children}
     </div>
   )

@@ -30,7 +30,6 @@ function NewProject() {
   const [projectDir, setProjectDir] = useState('');
   useMounted(() => {
     db = nedb.get('store/dashboard/project');
-    dashboardModule.getTemplate();
     ipcRenderer.on('selectDir',(event,value) => {
       setProjectDir(value);
     })
@@ -94,6 +93,7 @@ function NewProject() {
       <Button 
         type="primary" 
         shape="round"
+        size="small"
         onClick={showProjectList}
         >项目管理</Button>
       <CModal 

@@ -6,7 +6,7 @@ const sizeStyle = css`
     return ({
       large: '16px',
       middle: '14px',
-      small: '14px',
+      small: '12px',
     }[props.size || 'middle'])
   }};
   height: ${ props => {
@@ -16,11 +16,21 @@ const sizeStyle = css`
       small: '24px',
     }[props.size || 'middle'])
   }};
+  width: ${ props => {
+    if (!props.hasChildren) {
+      return ({
+        large: '40px',
+        middle: '32px',
+        small: '24px',
+      }[props.size || 'middle'])
+    }
+    return 'initial';
+  }};
   padding: ${ props => {
     return ({
-      large: '0 15px',
-      middle: '0 15px',
-      small: '0 7px',
+      large:  props.hasChildren ? '0 15px' : '0',
+      middle: props.hasChildren ? '0 15px' : '0',
+      small: props.hasChildren ? '0 7px' : '0',
     }[props.size || 'middle'])
   }};
 `
@@ -32,6 +42,7 @@ const typeStyle = css`
       dashed: '#ff',
       danger: '#f5f5f5',
       link: '#fff',
+      light: '#E8F3FF',
     }[props.type || 'primary'])
   }};
   border-color: ${ props => {
@@ -40,6 +51,7 @@ const typeStyle = css`
       normal: '#d9d9d9',
       danger: '#fff',
       link: '#fff',
+      light: '#E8F3FF',
     }[props.type || 'primary'])
   }};
   color: ${ props => {
@@ -48,6 +60,7 @@ const typeStyle = css`
       normal: 'rgba(0,0,0,0.65)',
       danger: '#f5222d',
       link: 'rgba(0,0,0,0.65)',
+      light:'#1890ff',
     }[props.type || 'primary'])
   }};
   &:hover ${ props => {
@@ -75,7 +88,7 @@ const shapeStyle = css`
   border-radius: ${ props => {
     return ({
       normal: '4',
-      round: '40px',
+      round: '20px',
     }[props.shape || 'normal'])
   }};
 `
@@ -85,6 +98,7 @@ const Btn = styled.div`
   border-radius: 4px;
   cursor: pointer;
   align-items: center;
+  justify-content: center;
   white-space: nowrap;
   text-align: center;
   line-height: 1.499;
@@ -96,14 +110,24 @@ const Btn = styled.div`
   ${shapeStyle};
 `
 function Button(props) {
-  return (
-    <Btn {...props}>
-      {
-        props.icon ? <Icon type={props.icon} /> : null
-      }
-      <span style={{marginLeft: props.icon ? 5 : 0}}>{props.children}</span>
-    </Btn>
-  )
+  if (props.children) {
+    return (
+      <Btn {...props} hasChildren={!!props.children}>
+        {
+          props.icon ? <Icon type={props.icon} theme={props.theme}/> : null
+        }
+        <span style={{ marginLeft: props.icon ? 5 : 0 }}>{props.children}</span>
+      </Btn>
+    )
+  } else {
+    return (
+      <Btn {...props}>
+        {
+          props.icon ? <Icon type={props.icon} theme={props.theme}/> : null
+        }
+      </Btn>
+    )
+  }
 
 }
 export default Button;
