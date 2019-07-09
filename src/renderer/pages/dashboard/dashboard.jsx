@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { createStore, useRedux } from 'redux';
 import { useMounted } from 'hooks';
@@ -30,10 +30,12 @@ function Dashboard(props) {
   useMounted(() => {
     DataModule.init();
   })
-
+  useEffect(() => {
+    DataModule.project.dir && terminalModule.runShell([`cd ${DataModule.project.dir}`])
+  }, [DataModule.project.dir])
   return (
     <div styleName="root">
-      <Terminal  visible={logVisible} />
+      <Terminal  visible={logVisible} projectPath={DataModule.project.dir}/>
       <Layout styleName="layout">
         <Header styleName="header">
           <div className="flex align-center flex-1">
@@ -59,7 +61,10 @@ function Dashboard(props) {
             <PagePanel title="页面" pages={DataModule.pages}/>
           </Col>
           <Col xs={12}>
-            <Dependency dep={DataModule.dependency}/>
+            <Dependency 
+              dep={DataModule.dependency}
+              update={() => {}}
+            />
           </Col>
         </Row>
         </Content>

@@ -3,10 +3,12 @@ import { message } from 'antd';
 import nedb from 'util/nedb';
 import { objToArray } from 'util/common';
 import moment from 'moment';
+import Dependency from './dependency';
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process')
 const os = require('os');
+
 /**
  * 负责管理当前项目
 .
@@ -61,17 +63,15 @@ class Project {
     const packagePath =  path.join(this._project.dir, 'package.json');
     try {
       const json = JSON.parse(fs.readFileSync(packagePath).toString());
-      json.dependencies = 
-      dependency = {
+
+      dependency = new Dependency({
+        cwd: this._project.dir,
         dependencies: objToArray(json.dependencies),
         devDependencies: objToArray(json.devDependencies),
-      }
+      })
       this.cache.set('dependency', dependency);
     } catch (error) {
-      dependency = {
-        dependencies: [],
-        devDependencies: [],
-      }
+      dependency = new Dependency({});
     }
     return dependency;
   }
