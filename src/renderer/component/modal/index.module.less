@@ -1,5 +1,6 @@
 .modal {
   position: fixed;
+  display: block;
   z-index: 1000;
   top: 0;
   height: 100%;
@@ -9,38 +10,83 @@
     height: 100%;
     opacity: 1;
     left: 0;
+    transform: translateX(-100%);
     top: 0;
     min-width: 100px;
     background-color: #fff;
+    transition: transform .3s ease-out;
   }
   .right {
     position: absolute;
+    display: block;
     height: 100%;
     opacity: 1;
     right: 0;
     top: 0;
     min-width: 100px;
+    transform: translateX(100%);
     background-color: #fff;
-    animation: pushleft .3s ease-out normal;
+    transition: transform .3s cubic-bezier(.7, .3, .1, 1);
   }
   .center {
     position: absolute;
     background-color: #fff;
+    opacity: 0;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 1;
+    transform: translate(-50%, -60%);
+    transition: all .3s cubic-bezier(.7, .3, .1, 1);
   }
-}
-.mask {
-  position: absolute;
-  z-index: -1;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width:100%;
-  background-color: rgba(0, 0, 0, .5);
-  animation: spring .3s ease-in-out 1 normal;
+  .mask {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width:100%;
+    background-color: rgba(0, 0, 0, .5);
+    transition: opacity .3s cubic-bezier(.7, .3, .1, 1);
+  }
+  &.enter {
+    .right {
+      transform: translateX(0%);
+    }
+    .left {
+      transform: translateX(0%);
+    }
+    .center {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    .mask {
+      opacity: 1;
+    }
+  }
+  &.leave {
+    .right {
+      transform: translateX(100%);
+    }
+    .left {
+      transform: translateX(-100%);
+    }
+    .center {
+      transform: translate(-50%, -60%);
+      opacity: 0;
+    }
+    .mask {
+      opacity: 0;
+    }
+  }
+  &.hide {
+    .right,
+    .left,
+    .center,
+    .mask {
+      display: none;
+    }
+    display: none;
+  }
 }
 
 @keyframes spring{
@@ -49,6 +95,6 @@
 }
 
 @keyframes pushleft{
-  0% {right: -100px;opacity: 0;}
+  0% {right: -100%;opacity: 0;}
   100% {right: 0px;opacity: 1;}
 }

@@ -421,7 +421,7 @@ module.exports = function(webpackEnv) {
                   [
                     'react-css-modules',
                     {
-                      generateScopedName: '[path]___[name]__[local]___[hash:base64:5]',
+                      generateScopedName: isEnvProduction ? '[hash:base64:5]' : '[local]_[hash:base64:5]',
                       filetypes: {
                         '.less': {
                           syntax: 'postcss-less'
@@ -525,7 +525,7 @@ module.exports = function(webpackEnv) {
               use: getStyleLoaders(
                 {
                   importLoaders: 2,
-                  localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
+                  localIdentName: isEnvProduction ? '[hash:base64:5]' : '[local]_[hash:base64:5]',
                   modules:true,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
