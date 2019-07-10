@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Tabs, Icon, Tooltip } from 'antd';
 import styled from 'styled-components';
 import Button from 'component/button';
+import Card from 'component/card';
 import { If, ElseIf, Else } from 'component/condition';
-import { terminalModule } from '../terminal'
+import { module as terminalModule } from '../terminal'
+// dashboard 页面的数据模块
+import { module as rootModule } from '../../dashboard';
 const { TabPane } = Tabs;
 const fs = require('fs');
 
@@ -18,13 +21,12 @@ function Operation(props) {
     if (installing) {
       console.log('安装中')
       let timer = setInterval(() => {
-        console.log('检查')
         if (fs.existsSync(item.path)) {
           clearInterval(timer);
-          item.installed = true;
+          rootModule.refreshDependency();
           setInstalling(false);
         }
-      },1000)
+      }, 1000)
     }
   }, [installing])
   return (
@@ -43,7 +45,7 @@ function Operation(props) {
         }}>安装</Button>
       </ElseIf>
       <Else>
-        <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a"/>
+        <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
       </Else>
     </OperationWrap>
   )
@@ -71,16 +73,29 @@ function DepList(props) {
 }
 export default function Dependency(props) {
   return (
-    <Root>
-      <Tabs defaultActiveKey="1" tabBarStyle={{ height: '50px', display: 'flex', alignItems: 'stretch', margin: 0 }}>
-        <TabPane tab="dependencies" key="1" style={{ height: 300, overflowY: 'auto' }}>
-          <DepList data={props.dep.dependencies}/>
-        </TabPane>
-        <TabPane tab="devDependencies" key="2" style={{ height: 300, overflowY: 'auto' }}>
-          <DepList data={props.dep.devDependencies} />
-        </TabPane>
-      </Tabs>
-    </Root>
+    <Card className={props.className}>
+      <Card.Header>
+        <div className="flex align-center">
+          <span className="flex-1">{props.title}</span>
+          <Tooltip placement="top" title="刷新">
+            <Button type="primary" shape="round" icon="sync" size="small" onClick={() => rootModule.refreshDependency()}></Button>
+          </Tooltip>
+        </div>
+      </Card.Header>
+      <Card.Body>
+        <Root>
+          <Tabs defaultActiveKey="1" tabBarStyle={{ display: 'flex', alignItems: 'stretch', justifyContent: 'center', margin: 0 }}>
+            <TabPane tab="dependencies" key="1" style={{ height: 256, overflowY: 'auto' }}>
+              <DepList data={props.dep.dependencies} />
+            </TabPane>
+            <TabPane tab="devDependencies" key="2" style={{ height: 256, overflowY: 'auto' }}>
+              <DepList data={props.dep.devDependencies} />
+            </TabPane>
+          </Tabs>
+        </Root>
+      </Card.Body>
+    </Card>
+
   )
 }
 
@@ -90,7 +105,7 @@ const Li = styled.div`
   margin-left: 30px;
   padding-right: 30px;
   align-items: center;
-  height: 60px;
+  height: 55px;
   border-bottom: 1px solid #F3F5F8;
 `
 const Indication = styled.div`
@@ -102,6 +117,14 @@ const Name = styled.div`
   display: flex;
   flex: auto;
   flex-direction: column;
+  width: 0;
+  margin-right: 20px;
+  .name {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .version {
     font-size: 12px;
     color: #BDBDBD;
@@ -112,7 +135,4 @@ const Name = styled.div`
 const Root = styled.div`
   border-radius: 5px;
   background-color: #fff;
-  .ant-tabs-nav .ant-tabs-tab {
-    padding: 15px 16px;
-  }
 `

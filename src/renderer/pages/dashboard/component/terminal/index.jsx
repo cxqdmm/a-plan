@@ -77,7 +77,7 @@ function TerminalContainer(props) {
     </Termianl>
   )
 }
-export { terminalModule }
+export { terminalModule as module }
 export default useRedux(store)(hot(connect(terminalModule)(TerminalContainer)));
 
 const Termianl = styled.div`
@@ -87,7 +87,7 @@ const Termianl = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 5;
+  padding: 5px;
   user-select: none;
   background-color: #232527;
   left: ${props => props.visible ? 0 : '10000px'};

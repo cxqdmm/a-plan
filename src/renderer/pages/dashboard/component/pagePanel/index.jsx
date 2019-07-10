@@ -33,7 +33,7 @@ const Li = styled.div`
   margin-left: 30px;
   padding-right: 30px;
   align-items: center;
-  height: 60px;
+  height: 55px;
   border-bottom: 1px solid #F3F5F8;
 `
 const Name = styled.div`

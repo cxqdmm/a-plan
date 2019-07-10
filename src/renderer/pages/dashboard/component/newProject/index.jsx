@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import path from 'path';
-import { ipcRenderer } from 'electron';
 import { hot } from 'react-hot-loader/root';
 // component
 import { Input, Icon, message } from 'antd';
@@ -11,8 +10,8 @@ import CModal from 'component/modal';
 import Step from 'component/step';
 import Button from 'component/button';
 // module
-import { terminalModule as terminal } from '../terminal';
-import dashboardModule from '../../module';
+import { module as terminalModule } from '../terminal';
+import { module as dashboardModule } from '../../dashboard';
 // hook
 import useMounted from 'hooks/useMounted';
 // others
@@ -44,7 +43,7 @@ function NewProject() {
       dir: projectDir + '/' + projectName,
       today: new Date(),
     })
-    terminal.runShell([
+    terminalModule.runShell([
       `cd ${projectDir}`,
       `mkdir ${projectName}`,
       `cd ${projectName}`,

@@ -140,6 +140,11 @@ class EditProjectController {
   getPages() {
     return this.project.pages;
   }
+
+  refreshDependency() {
+    this.project.cache.delete('dependency');
+    return this.project.dependency;
+  }
   // 获取依赖
   getDependency() {
     return this.project.dependency;

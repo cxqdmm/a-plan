@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { createStore, useRedux } from 'redux';
+import { createStore, useRedux, connect } from 'redux';
 import { If, Else} from 'component/condition';
 import { useMounted } from 'hooks';
 import { hot } from 'react-hot-loader/root';
@@ -9,10 +9,10 @@ import { hot } from 'react-hot-loader/root';
 import NewProject from './component/newProject';
 import PagePanel from './component/pagePanel';
 import Dependency from './component/dependencyPanel';
-import Terminal, { terminalModule } from './component/terminal';
+import Terminal, { module as terminalModule } from './component/terminal';
 import Button from 'component/button';
 import ImgIcon from 'component/imgIcon';
-import { Tooltip, Layout, Divider, Row, Col } from 'antd';
+import { Tooltip, Layout, Divider, Row, Col, Empty } from 'antd';
 import './index.module.less';
 
 import DataModule from './module';
@@ -64,6 +64,7 @@ function Dashboard(props) {
               </Col>
               <Col xs={12}>
                 <Dependency
+                  title="依赖"
                   dep={DataModule.dependency}
                   update={() => { }}
                 />
@@ -71,9 +72,7 @@ function Dashboard(props) {
             </Row>
           </If>
           <Else>
-            <Empty>
-              <img src={require('static/images/empty.png')} alt=""/>
-            </Empty>
+            <Empty />
           </Else>
         </Content>
         <Footer styleName="footer">
@@ -82,7 +81,8 @@ function Dashboard(props) {
     </div>
   )
 }
-export default useRedux(store)(hot(Dashboard));
+export {DataModule as module}
+export default useRedux(store)(hot(connect(DataModule)(Dashboard)));
 
 const ProjectName = styled.div`
   display: inline-flex;
@@ -92,11 +92,4 @@ const ProjectName = styled.div`
   font-size: 16px;
   margin-left: 10px;
   white-space: nowrap;
-`
-const Empty = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
 `

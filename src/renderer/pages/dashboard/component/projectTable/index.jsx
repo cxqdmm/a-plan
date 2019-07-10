@@ -58,5 +58,5 @@ function ListItem(props) {
 </Row>
 }
 
-export { DataModule }
+export { DataModule as module}
 export default useRedux(store)(hot(connect(DataModule)(ProjectTable)));
