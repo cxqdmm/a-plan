@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, Icon, Tooltip } from 'antd';
 import styled from 'styled-components';
 import Button from 'component/button';
 import { If, ElseIf, Else } from 'component/condition';
 import { terminalModule } from '../terminal'
 const { TabPane } = Tabs;
+const fs = require('fs');
 
 const OperationWrap = styled.div`
   flex: 0;
@@ -13,6 +14,19 @@ const OperationWrap = styled.div`
 function Operation(props) {
   const item = props.item;
   const [installing, setInstalling] = useState(false);
+  useEffect(() => {
+    if (installing) {
+      console.log('安装中')
+      let timer = setInterval(() => {
+        console.log('检查')
+        if (fs.existsSync(item.path)) {
+          clearInterval(timer);
+          item.installed = true;
+          setInstalling(false);
+        }
+      },1000)
+    }
+  }, [installing])
   return (
     <OperationWrap >
       <If value={installing}>
@@ -35,8 +49,8 @@ function Operation(props) {
   )
 }
 
-function DepList(list) {
-  return list ? list.map((item, key) => {
+function DepList(props) {
+  return props.data ? props.data.map((item, key) => {
     return (
       <Li key={item.name}>
         <Indication>
@@ -60,14 +74,10 @@ export default function Dependency(props) {
     <Root>
       <Tabs defaultActiveKey="1" tabBarStyle={{ height: '50px', display: 'flex', alignItems: 'stretch', margin: 0 }}>
         <TabPane tab="dependencies" key="1" style={{ height: 300, overflowY: 'auto' }}>
-          {
-            DepList(props.dep.dependencies)
-          }
+          <DepList data={props.dep.dependencies}/>
         </TabPane>
         <TabPane tab="devDependencies" key="2" style={{ height: 300, overflowY: 'auto' }}>
-          {
-            DepList(props.dep.devDependencies)
-          }
+          <DepList data={props.dep.devDependencies} />
         </TabPane>
       </Tabs>
     </Root>

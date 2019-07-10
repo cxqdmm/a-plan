@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { createStore, useRedux } from 'redux';
+import { If, Else} from 'component/condition';
 import { useMounted } from 'hooks';
 import { hot } from 'react-hot-loader/root';
 
@@ -35,7 +36,7 @@ function Dashboard(props) {
   }, [DataModule.project.dir])
   return (
     <div styleName="root">
-      <Terminal  visible={logVisible} projectPath={DataModule.project.dir}/>
+      <Terminal visible={logVisible} projectPath={DataModule.project.dir} />
       <Layout styleName="layout">
         <Header styleName="header">
           <div className="flex align-center flex-1">
@@ -46,27 +47,34 @@ function Dashboard(props) {
               <Button type="light" shape="round" size="small" icon="edit" onClick={() => { controller.openInVscode() }}>编译器</Button>
             </Tooltip>
             <Tooltip placement="bottom" title="日志">
-              <Button type="light" style={{marginLeft: 10}}  shape="round" size="small" icon="code" onClick={switchLog()}>日志</Button>
+              <Button type="light" style={{ marginLeft: 10 }} shape="round" size="small" icon="code" onClick={switchLog()}>日志</Button>
             </Tooltip>
             <Tooltip placement="bottom" title="运行">
-              <Button type="light" style={{marginLeft: 10}} shape="round" size="small" icon="chrome" onClick={() => terminalModule.runShell([`cd ${DataModule.project.dir}`, 'npm run start'])}>启动调试</Button>
+              <Button type="light" style={{ marginLeft: 10 }} shape="round" size="small" icon="chrome" onClick={() => terminalModule.runShell([`cd ${DataModule.project.dir}`, 'npm run start'])}>启动调试</Button>
             </Tooltip>
             <Divider type="vertical" />
           </div>
           <NewProject />
         </Header>
         <Content styleName="body">
-        <Row gutter={{ xs: 8, sm: 16, md: 24}}>
-          <Col xs={12}>
-            <PagePanel title="页面" pages={DataModule.pages}/>
-          </Col>
-          <Col xs={12}>
-            <Dependency 
-              dep={DataModule.dependency}
-              update={() => {}}
-            />
-          </Col>
-        </Row>
+          <If value={!!DataModule.project.dir}>
+            <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
+              <Col xs={12}>
+                <PagePanel title="页面" pages={DataModule.pages} />
+              </Col>
+              <Col xs={12}>
+                <Dependency
+                  dep={DataModule.dependency}
+                  update={() => { }}
+                />
+              </Col>
+            </Row>
+          </If>
+          <Else>
+            <Empty>
+              <img src={require('static/images/empty.png')} alt=""/>
+            </Empty>
+          </Else>
         </Content>
         <Footer styleName="footer">
         </Footer>
@@ -84,4 +92,11 @@ const ProjectName = styled.div`
   font-size: 16px;
   margin-left: 10px;
   white-space: nowrap;
+`
+const Empty = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 `

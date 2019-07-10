@@ -9,17 +9,19 @@ export default class Dependency {
     this.devDependencies = devDependencies;
     this.addInstalledStatus();
   }
-  checkInstalledStatus(dep) {
-    return fs.existsSync(path.join(this.cwd,'node_modules', dep));
+  checkInstalledStatus(path) {
+    return fs.existsSync(path);
   }
   addInstalledStatus() {
     this.dependencies.forEach(item => {
-      item.type = 'dependency'
-      item.installed = this.checkInstalledStatus(item.name);
+      item.type = 'dependency';
+      item.path = path.join(this.cwd,'node_modules', item.name);
+      item.installed = this.checkInstalledStatus(item.path);
     });
     this.devDependencies.forEach(item => {
-      item.type = 'devDenpendency'
-      item.installed = this.checkInstalledStatus(item.name);
+      item.type = 'devDenpendency';
+      item.path = path.join(this.cwd,'node_modules', item.name);
+      item.installed = this.checkInstalledStatus(item.path);
     });
   }
 

@@ -37,6 +37,9 @@ class Project {
     return this._project.dir;
   }
   get pages() {
+    if (!this._project.dir) {
+      return [];
+    }
     let pages = this.cache.get('pages')
     if (pages) {
       return pages;
@@ -46,16 +49,21 @@ class Project {
     const pageInfo = pages.reduce((out, page) => {
       const filepath = path.join(pageDir, page);
       const stats = fs.statSync(filepath);
-      stats.name = page;
-      stats.path = filepath;
-      stats.mtime = moment(stats.mtime).format('YYYY-MM-DD HH:mm:ss')
-      out.push(stats);
+      if (stats.isDirectory()) {
+        stats.name = page;
+        stats.path = filepath;
+        stats.mtime = moment(stats.mtime).format('YYYY-MM-DD HH:mm:ss')
+        out.push(stats);
+      }
       return out;
     }, [])
     this.cache.set('pages', pageInfo);
     return pageInfo;
   }
   get dependency() {
+    if (!this._project.dir) {
+      return {};
+    }
     let dependency = this.cache.get('dependency')
     if (dependency) {
       return dependency;
@@ -91,7 +99,9 @@ class EditProjectController {
   async getEditProjectFromCache() {
     let doc;
     doc = await this.db.find({ type: 'editProject' });
-    this.project.init(doc[0]);
+    if (doc.length) {
+      this.project.init(doc[0]);
+    }
   }
   // 设置关联的项目
   setEditProject(project) {

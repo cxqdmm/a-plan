@@ -16,7 +16,7 @@ function createWindow() {
       nodeIntegration: true
   }
   });
-  mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
+  mainWindow.loadURL(isDev ? `http://localhost:${process.env.PORT}` : `file://${path.join(__dirname, '../dist/renderer/index.html')}`);
   if (isDev) {
     // Open the DevTools.
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
@@ -38,13 +38,13 @@ app.on('activate', () => {
     createWindow();
   }
 })
-ipcMain.on('open-directory-dialog', (event, p) => {
+ipcMain.on('open-directory-dialog', (event, id, p) => {
   dialog.showOpenDialog({
         properties: [p]
       },function (files) {
           if (files){// 如果有选中
             // 发送选择的对象给子进程
-            event.sender.send('selectDir', files[0])
+            event.sender.send('selectDir',id, files[0])
           }
       })
 })
