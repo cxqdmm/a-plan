@@ -36,7 +36,7 @@ function Dashboard(props) {
   }, [DataModule.project.dir])
   return (
     <div styleName="root">
-      <Terminal visible={logVisible} projectPath={DataModule.project.dir} />
+      <Terminal visible={logVisible} projectPath={DataModule.project.dir} onClose={switchLog()}/>
       <Layout styleName="layout">
         <Header styleName="header">
           <div className="flex align-center flex-1">

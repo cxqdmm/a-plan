@@ -9,7 +9,7 @@ import { Terminal } from 'xterm';
 import 'xterm/dist/xterm.css'
 import 'xterm/dist/addons/fullscreen/fullscreen.css';
 import LocalEchoController from './util/LocalEchoController';
-
+import { Icon } from 'antd';
 import * as fit from 'xterm/lib/addons/fit/fit';
 const store = createStore(React.createContext(), terminalModule)
 Terminal.applyAddon(fit);
@@ -73,13 +73,29 @@ function TerminalContainer(props) {
   },[props.visible])
   return (
     <Termianl visible={props.visible} >
+      <HeadBar onClick={() => {props.onClose()}}>
+        <Icon type="close-circle" />
+      </HeadBar>
       <div ref={terminalRef} id="terminal"></div>
     </Termianl>
   )
 }
 export { terminalModule as module }
 export default useRedux(store)(hot(connect(terminalModule)(TerminalContainer)));
-
+const HeadBar = styled.div`
+  position: absolute;
+  cursor: pointer;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  color: #fff;
+`
 const Termianl = styled.div`
   position: absolute;
   z-index: 1000;
