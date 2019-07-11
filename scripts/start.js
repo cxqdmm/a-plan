@@ -40,13 +40,13 @@ function startRenderer() {
       env: process.env,
     });
     rendererProcess.stdout.on('data', data => {
-      logStats('渲染进程build', data, 'blue');
-      if (data.toString() === 'renderer complete') {
+      logStats('渲染进程', data, 'blue');
+      if (/renderer complete/.test(data.toString())) {
         resolve();
       }
     })
     rendererProcess.stderr.on('data', data => {
-      logStats('渲染进程build', data, 'red')
+      logStats('渲染进程', data, 'red')
     })
   })
 }
@@ -57,7 +57,7 @@ function startMain() {
     const compiler = webpack(config)
 
     compiler.hooks.watchRun.tapAsync('watch-run', (compilation, done) => {
-      logStats('主线程build', chalk.white.bold('compiling...'), 'blue')
+      logStats('主进程', chalk.white.bold('compiling...'), 'blue')
       done()
     })
 
@@ -67,7 +67,7 @@ function startMain() {
         return
       }
 
-      logStats('主线程build', stats, 'blue')
+      logStats('主进程', stats, 'blue')
 
       if (electronProcess && electronProcess.kill) {
         manualRestart = true
@@ -86,6 +86,7 @@ function startMain() {
 }
 
 function startElectron() {
+  logStats('Electron', chalk.white.bold('启动electron...'), 'blue')
   var args = [
     '--inspect=5858',
     path.join(__dirname, '../dist/main/main.js')

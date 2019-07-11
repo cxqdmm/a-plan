@@ -24,7 +24,6 @@ exports.launchTerminal = function (ipcMain) {
   const shell = new Shell();
 
   ipcMain.on('shell-message', (event, p) => {
-    process.stdout.write('试验重启功能');
     shell.write(event.sender, p);
   })
 }
