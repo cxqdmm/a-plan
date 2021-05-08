@@ -89,7 +89,7 @@
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "local-echo": "github:wavesoft/local-echo",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "mini-css-extract-plugin": "0.5.0",
     "moment": "^2.24.0",
     "nedb": "^1.8.0",
