@@ -148,7 +148,7 @@
     "babel-plugin-import": "^1.11.0",
     "babel-plugin-react-css-modules": "^5.2.6",
     "concurrently": "^4.1.0",
-    "electron": "^5.0.1",
+    "electron": "^11.5.0",
     "electron-builder": "^20.40.2",
     "electron-is-dev": "^1.1.0",
     "electron-rebuild": "^1.8.5",
